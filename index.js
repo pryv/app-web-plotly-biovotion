@@ -1,32 +1,71 @@
 var container = document.getElementById("pryvGraphs");
 var monitor;
 
-// AUTH
-pryv.Auth.config.registerURL = {host: 'reg.pryv.me', 'ssl': true};
 
-// Authenticate user
-var authSettings = {
-    requestingAppId: 'appweb-plotly',
-    requestedPermissions: [
-        {
-            streamId: '*',
-            level: 'manage'
-        }
-    ],
-    returnURL: false,
-    spanButtonID: 'pryv-button',
-    callbacks: {
-        needSignin: resetGraphs,
-        needValidation: null,
-        signedIn: function (connect) {
-            connect.fetchStructure(function () {
-                setupMonitor(connect);
-            });
-        }
-    }
-};
+/**
+ * retrieve the registerURL from URL parameters
+ */
+function getRegisterURL() {
+  return pryv.utility.urls.parseClientURL().parseQuery()['pryv-reg'];
+}
 
-pryv.Auth.setup(authSettings);
+var customRegisterUrl = getRegisterURL();
+if (customRegisterUrl) {
+  pryv.Auth.config.registerURL = {host: customRegisterUrl, 'ssl': true};
+}
+
+/**
+ * retrieve the registerURL from URL parameters
+ */
+function getSettingsFromURL() {
+  var settings = {
+    username : pryv.utility.urls.parseClientURL().parseQuery()['username'],
+    domain : pryv.utility.urls.parseClientURL().parseQuery()['domain'],
+    auth: pryv.utility.urls.parseClientURL().parseQuery()['auth']
+  }
+
+  if (settings.username && settings.auth) {
+    return settings;
+  }
+
+  return null;
+}
+
+
+var settings = getSettingsFromURL();
+if (settings) {
+  var connection = new pryv.Connection(settings);
+  connection.fetchStructure(function () {
+    setupMonitor(connection);
+  });
+} else {
+
+  // Authenticate user
+  var authSettings = {
+      requestingAppId: 'appweb-plotly',
+      requestedPermissions: [
+          {
+              streamId: '*',
+              level: 'manage'
+          }
+      ],
+      returnURL: false,
+      spanButtonID: 'pryv-button',
+      callbacks: {
+          needSignin: resetGraphs,
+          needValidation: null,
+          signedIn: function (connect) {
+              connect.fetchStructure(function () {
+                  setupMonitor(connect);
+              });
+          }
+      }
+  };
+
+  pryv.Auth.setup(authSettings);
+}
+
+
 
 // MONITORING
 // Setup monitoring for remote changes
