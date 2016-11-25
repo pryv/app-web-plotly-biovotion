@@ -1,1 +1,1 @@
-# app-web-potly
+# app-web-plotly
