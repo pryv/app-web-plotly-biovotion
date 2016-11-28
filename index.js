@@ -65,8 +65,6 @@ if (settings) {
   pryv.Auth.setup(authSettings);
 }
 
-
-
 // MONITORING
 // Setup monitoring for remote changes
 function setupMonitor(connection) {
@@ -152,8 +150,6 @@ function createGraph(event) {
   };
 
   Plotly.newPlot(graphKey, [graphs[graphKey].trace], graphs[graphKey].layout);
-  Plotly.newPlot('fullGraph', [graphs[graphKey].trace], graphs[graphKey].layout);
-    Plotly.addTraces('fullGraph', [graphs[graphKey].trace]);
 }
 
 function updateGraph(events) {
@@ -183,7 +179,6 @@ function updateGraph(events) {
          Plotly.redraw(graphKey);
      });
 };
-
 
 function resetGraphs() {
     if (monitor) {
