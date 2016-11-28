@@ -124,23 +124,31 @@ function createGraph(event) {
   graphs[graphKey] = {
     type: event.type,
     streamId: event.streamId + ' ' + titleY,
+    last: event.timeLT,
     trace: {
       x: [],
       y: [],
       mode: 'lines',
       name: event.stream.name,
+      connectgaps: false,
       type: 'scatter'
     },
     layout : {
       title: title,
       xaxis1: {
+        rangeselector: selectorOptions,
+        //rangeslider: {},
         title: 'Time',
         showticklabels : true
       },
       yaxis1: {
         title: titleY,
-        showticklabels : true
+        showticklabels : true,
+        fixedrange: true
       }
+    },
+    options: {
+
     }
   };
   if (document.getElementById(graphKey) === null) {
@@ -149,7 +157,8 @@ function createGraph(event) {
     container.appendChild(graph);
   };
 
-  Plotly.newPlot(graphKey, [graphs[graphKey].trace], graphs[graphKey].layout);
+  Plotly.newPlot(graphKey, [graphs[graphKey].trace],
+    graphs[graphKey].layout, graphs[graphKey].options);
 }
 
 function updateGraph(events) {
@@ -167,8 +176,17 @@ function updateGraph(events) {
       }
 
       if (! graphs[graphKey].ignore) {
+
+
+        if ((event.timeLT - graphs[graphKey].last) > 5 * 60 * 1000) {
+          graphs[graphKey].trace.x.push(getDateString(graphs[graphKey].last + 1));
+          graphs[graphKey].trace.y.push(null);
+        }
+
         graphs[graphKey].trace.x.push(getDateString(event.timeLT));
         graphs[graphKey].trace.y.push(event.content);
+
+        graphs[graphKey].last = event.timeLT;
 
         toRedraw[graphKey] = true;
       }
@@ -188,3 +206,31 @@ function resetGraphs() {
         container.removeChild(container.firstChild);
     }
 }
+
+
+// *** Plotly designs ***  //
+var selectorOptions = {
+  buttons: [{
+    step: 'month',
+    stepmode: 'backward',
+    count: 1,
+    label: '1m'
+  }, {
+    step: 'month',
+    stepmode: 'backward',
+    count: 6,
+    label: '6m'
+  }, {
+    step: 'year',
+    stepmode: 'todate',
+    count: 1,
+    label: 'YTD'
+  }, {
+    step: 'year',
+    stepmode: 'backward',
+    count: 1,
+    label: '1y'
+  }, {
+    step: 'all',
+  }],
+};
