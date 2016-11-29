@@ -124,20 +124,19 @@ function createGraph(event) {
   graphs[graphKey] = {
     type: event.type,
     streamId: event.streamId + ' ' + titleY,
-    last: event.timeLT,
+    //last: event.timeLT,
     trace: {
       x: [],
       y: [],
       mode: 'lines',
       name: event.stream.name,
-      connectgaps: false,
+      //connectgaps: false,
       type: 'scatter'
     },
     layout : {
       title: title,
       xaxis1: {
         rangeselector: selectorOptions,
-        //rangeslider: {},
         title: 'Time',
         showticklabels : true
       },
@@ -176,17 +175,17 @@ function updateGraph(events) {
       }
 
       if (! graphs[graphKey].ignore) {
-
-
+          /*
         if ((event.timeLT - graphs[graphKey].last) > 5 * 60 * 1000) {
           graphs[graphKey].trace.x.push(getDateString(graphs[graphKey].last + 1));
           graphs[graphKey].trace.y.push(null);
         }
+        */
 
         graphs[graphKey].trace.x.push(getDateString(event.timeLT));
         graphs[graphKey].trace.y.push(event.content);
 
-        graphs[graphKey].last = event.timeLT;
+        // graphs[graphKey].last = event.timeLT;
 
         toRedraw[graphKey] = true;
       }
