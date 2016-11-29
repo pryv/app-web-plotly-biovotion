@@ -46,7 +46,7 @@ if (settings) {
       requestedPermissions: [
           {
               streamId: '*',
-              level: 'manage'
+              level: 'read'
           }
       ],
       returnURL: false,
@@ -95,6 +95,16 @@ function setupMonitor(connection) {
 // GRAPHS
 var graphs = {};
 
+
+var presets = { 
+  'biovotion-bpm_frequency/bpm' : {
+      gaps: 30
+  }
+
+};
+
+
+
 function getDateString(timestamp) {
   var date = new Date(timestamp);
   return date.toISOString().substring(0, 10) + ' '
@@ -120,20 +130,21 @@ function createGraph(event) {
   });
   title += event.stream.name;
 
+  console.log(graphKey);
 
   graphs[graphKey] = {
+    traceKey: graphKey,
     type: event.type,
     streamId: event.streamId + ' ' + titleY,
-    //last: event.timeLT,
+    last: event.timeLT,
+    gaps: null,
     trace: {
       x: [],
       y: [],
-      mode: 'lines+markers',
+      mode: 'lines',
       name: event.stream.name,
-      //connectgaps: false,
+      connectgaps: false,
       type: 'scatter',
-        marker: { size: 4 },
-        line: {width: 1}
     },
     layout : {
       title: title,
@@ -152,6 +163,12 @@ function createGraph(event) {
 
     }
   };
+
+  if (presets[graphKey]) {
+    _.extend(graphs[graphKey], presets[graphKey]);
+  }
+
+
   if (document.getElementById(graphKey) === null) {
     var graph = document.createElement('div');
     graph.setAttribute('id', graphKey);
@@ -161,6 +178,9 @@ function createGraph(event) {
   Plotly.newPlot(graphKey, [graphs[graphKey].trace],
     graphs[graphKey].layout, graphs[graphKey].options);
 }
+
+
+
 
 function updateGraph(events) {
     // needed ?
@@ -177,17 +197,19 @@ function updateGraph(events) {
       }
 
       if (! graphs[graphKey].ignore) {
-          /*
-        if ((event.timeLT - graphs[graphKey].last) > 5 * 60 * 1000) {
-          graphs[graphKey].trace.x.push(getDateString(graphs[graphKey].last + 1));
-          graphs[graphKey].trace.y.push(null);
+
+
+        if (graphs[graphKey].gaps) {
+          if ((event.timeLT - graphs[graphKey].last) > graphs[graphKey].gaps * 1000) {
+            graphs[graphKey].trace.x.push(getDateString(graphs[graphKey].last + 1));
+            graphs[graphKey].trace.y.push(null);
+          }
         }
-        */
 
         graphs[graphKey].trace.x.push(getDateString(event.timeLT));
         graphs[graphKey].trace.y.push(event.content);
 
-        // graphs[graphKey].last = event.timeLT;
+        graphs[graphKey].last = event.timeLT;
 
         toRedraw[graphKey] = true;
       }
