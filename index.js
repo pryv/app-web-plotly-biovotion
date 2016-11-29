@@ -128,10 +128,12 @@ function createGraph(event) {
     trace: {
       x: [],
       y: [],
-      mode: 'lines',
+      mode: 'lines+markers',
       name: event.stream.name,
       //connectgaps: false,
-      type: 'scatter'
+      type: 'scatter',
+        marker: { size: 4 },
+        line: {width: 1}
     },
     layout : {
       title: title,
