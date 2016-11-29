@@ -96,10 +96,37 @@ function setupMonitor(connection) {
 var graphs = {};
 
 
+
+
 var presets = { 
   'biovotion-bpm_frequency/bpm' : {
-      gaps: 30
+    gaps: 30,
+    bundleKey : 'toto',
+    trace: {
+      name: 'Heart rate',
+      mode: 'lines',
+      connectgaps: false,
+      type: 'scatter'
+    }
+  },
+  'biovotion-bpm_pressure/mmhg' : {
+    gaps: 30,
+    bundleKey : 'toto',
+    trace: {
+      name: 'SPO2',
+      mode: 'lines',
+      connectgaps: false,
+      type: 'scatter'
+    }
   }
+
+};
+
+var bundles = {
+  toto : {
+    title : 'TOTO'
+  }
+
 
 };
 
@@ -133,34 +160,19 @@ function createGraph(event) {
   console.log(graphKey);
 
   graphs[graphKey] = {
-    traceKey: graphKey,
+    bundleKey: graphKey,
     type: event.type,
     streamId: event.streamId + ' ' + titleY,
     last: event.timeLT,
     gaps: null,
-    trace: {
-      x: [],
-      y: [],
-      mode: 'lines',
-      name: event.stream.name,
-      connectgaps: false,
-      type: 'scatter',
-    },
+    trace: {},
     layout : {
       title: title,
       xaxis1: {
         rangeselector: selectorOptions,
         title: 'Time',
         showticklabels : true
-      },
-      yaxis1: {
-        title: titleY,
-        showticklabels : true,
-        fixedrange: true
       }
-    },
-    options: {
-
     }
   };
 
@@ -168,15 +180,54 @@ function createGraph(event) {
     _.extend(graphs[graphKey], presets[graphKey]);
   }
 
+  graphs[graphKey].trace.x = [1];
+  graphs[graphKey].trace.y = [1];
 
-  if (document.getElementById(graphKey) === null) {
+
+  if (! bundles[graphs[graphKey].bundleKey] || ! bundles[graphs[graphKey].bundleKey].num) {
+
+
+
     var graph = document.createElement('div');
-    graph.setAttribute('id', graphKey);
+    graph.setAttribute('id', graphs[graphKey].bundleKey);
     container.appendChild(graph);
-  };
 
-  Plotly.newPlot(graphKey, [graphs[graphKey].trace],
-    graphs[graphKey].layout, graphs[graphKey].options);
+    if (bundles[graphs[graphKey].bundleKey]) {
+      graphs[graphKey].title = bundles[graphs[graphKey].bundleKey].title;
+      bundles[graphs[graphKey].bundleKey].num = 1;
+    }
+
+    Plotly.newPlot(graphs[graphKey].bundleKey, [],
+      graphs[graphKey].layout);
+
+
+    Plotly.relayout(graphs[graphKey].bundleKey, {
+      yaxis1 : {
+        title : titleY,
+        side: 'left',
+      }
+    });
+    Plotly.addTraces(graphs[graphKey].bundleKey, [graphs[graphKey].trace]);
+
+  } else {
+
+    var num = ++bundles[graphs[graphKey].bundleKey].num;
+    var update = {};
+    update['yaxis' + num] = {
+      title : titleY,
+      side: 'right',
+      overlaying: 'y'
+    };
+
+    console.log(update, bundles[graphs[graphKey].bundleKey]);
+
+
+    graphs[graphKey].trace['yaxis'] = 'y' + num;
+    Plotly.relayout(graphs[graphKey].bundleKey, update);
+    Plotly.addTraces(graphs[graphKey].bundleKey, [graphs[graphKey].trace]);
+  }
+
+
 }
 
 
@@ -217,9 +268,11 @@ function updateGraph(events) {
     });
 
      Object.keys(toRedraw).forEach(function (graphKey) {
-         Plotly.redraw(graphKey);
+         Plotly.redraw(graphs[graphKey].bundleKey);
      });
 };
+
+
 
 function resetGraphs() {
     if (monitor) {
