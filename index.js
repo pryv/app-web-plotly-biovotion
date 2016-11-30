@@ -206,6 +206,10 @@ function createTrace(event) {
     };
 
   } else {   // next ones
+
+    // 4 Thiebaud .. this is strange it display both charts if we use to y1
+
+
     var num = plots[traces[traceKey].plotKey].num++;
     traces[traceKey].layout = { };
     traces[traceKey].layout['yaxis' + num] = {
