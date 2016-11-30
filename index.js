@@ -118,13 +118,43 @@ var presets = {
       connectgaps: false,
       type: 'scatter'
     }
+  },
+  'cirxezp55551ezqyqdwe554wu_frequency/bpm': {
+    //gaps: 30,
+    plotKey : 'Multiple',
+    trace: {
+      name: 'BPM',
+      mode: 'lines',
+      connectgaps: false,
+      type: 'scatter'
+    }
+  },
+  'cirxez1sb5519zqyqod67labt_density/mmol-l': {
+    //gaps: 30,
+    plotKey : 'Multiple',
+    trace: {
+      name: 'Glycemia',
+      mode: 'lines',
+      connectgaps: false,
+      type: 'scatter'
+    }
+  },
+  'cirzws1yp55mxzqyqr0s8qtt6_energy/cal': {
+    //gaps: 30,
+    plotKey : 'Multiple',
+    trace: {
+      name: 'Calories',
+      mode: 'lines',
+      connectgaps: false,
+      type: 'scatter'
+    }
   }
 
 };
 
 var plots = {
   toto : {
-    layout :  { title : 'TOTO' }
+    layout :  { title : 'Multiple' }
   }
 };
 
@@ -189,8 +219,8 @@ function createTrace(event) {
   }
 
 
-  plots[traces[traceKey].plotKey].layout.xaxis1 = {
-    rangeselector: selectorOptions,
+  plots[traces[traceKey].plotKey].layout.xaxis = {
+    //rangeselector: selectorOptions,
     title: 'Time',
     showticklabels : true
   };
@@ -207,10 +237,7 @@ function createTrace(event) {
 
   } else {   // next ones
 
-    // 4 Thiebaud .. this is strange it display both charts if we use to y1
-
-
-    var num = plots[traces[traceKey].plotKey].num++;
+    var num = ++plots[traces[traceKey].plotKey].num;
     traces[traceKey].layout = { };
     traces[traceKey].layout['yaxis' + num] = {
       title : titleY,
@@ -240,11 +267,9 @@ function initOrRedraw(traceKey) {
     container.appendChild(plot);
 
     Plotly.newPlot(trace.plotKey, [], plots[trace.plotKey].layout);
-
   }
 
-  console.log(JSON.stringify(trace.layout));
-  //Plotly.relayout(traces[traceKey].plotKey, trace.layout);
+  Plotly.relayout(traces[traceKey].plotKey, trace.layout);
   Plotly.addTraces(traces[traceKey].plotKey, [traces[traceKey].trace]);
 
 
