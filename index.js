@@ -69,7 +69,7 @@ if (settings) {
 // MONITORING
 // Setup monitoring for remote changes
 function setupMonitor(connection) {
-  var filter = new pryv.Filter();
+  var filter = new pryv.Filter({fromTime: 12});
   monitor = connection.monitor(filter);
 
   // should be false by default, will be updated in next lib version
@@ -109,11 +109,21 @@ var presets = {
       type: 'scatter'
     }
   },
-  'biovotion-object-temp_temperature/c' : {
+  'biovotion-bpw_count/generic' : {
     gaps: 30,
     plotKey : 'toto',
     trace: {
-      name: 'T°',
+      name: 'Blood P. W.',
+      mode: 'lines',
+      connectgaps: false,
+      type: 'scatter'
+    }
+  },
+  'biovotion-energy-expenditure_energy/ws': {
+    //gaps: 30,
+    plotKey : 'toto',
+    trace: {
+      name: 'Energy',
       mode: 'lines',
       connectgaps: false,
       type: 'scatter'
@@ -149,18 +159,20 @@ var presets = {
       type: 'scatter'
     }
   },
-      'cirzwnqgp55mhzqyqhpi3ph9h_count/steps': {
-        //gaps: 30,
-        plotKey : 'Multiple',
-        trace: {
-          name: 'Steps',
-          mode: 'lines',
-          connectgaps: false,
-          type: 'scatter'
-        }
-      }
+  'cirzwnqgp55mhzqyqhpi3ph9h_count/steps': {
+    //gaps: 30,
+    plotKey : 'Multiple',
+    trace: {
+      name: 'Steps',
+      mode: 'lines',
+      connectgaps: false,
+      type: 'scatter'
+    }
+  }
 
 };
+
+//presets = {};
 
 var plots = {
   toto : {
@@ -174,7 +186,7 @@ var plots = {
 function getDateString(timestamp) {
   var date = new Date(timestamp);
   return date.toISOString().substring(0, 10) + ' '  +
-      date.toISOString().substring(11, 19) + '.' + date.getMilliseconds();
+    date.toISOString().substring(11, 19) + '.' + date.getMilliseconds();
 }
 
 function createTrace(event) {
@@ -288,7 +300,7 @@ function initOrRedraw(traceKey) {
 }
 
 
-
+var ignoreFrom = ((new Date().getTime())) - (60 * 60 * 24 * 1000 * 10);
 
 function updatePlot(events) {
   // needed ?
@@ -303,6 +315,14 @@ function updatePlot(events) {
     if (! traces[traceKey]) { // create New Trace
       createTrace(event);
     }
+
+
+    if (event.trashed || (ignoreFrom > event.timeLT)) {
+    //  console.log(new Date(ignoreFrom), new Date(event.timeLT), ignoreFrom, event.timeLT, ignoreFrom - event.timeLT);
+
+      return;
+    }
+    //console.log(new Date(event.timeLT));
 
     if (! traces[traceKey].ignore) {
 
