@@ -124,11 +124,10 @@ var presets = { 
 
 var bundles = {
   toto : {
-    title : 'TOTO'
+     title : 'TOTO'
   }
-
-
 };
+
 
 
 
@@ -157,6 +156,8 @@ function createGraph(event) {
   });
   title += event.stream.name;
 
+
+
   console.log(graphKey);
 
   graphs[graphKey] = {
@@ -166,12 +167,11 @@ function createGraph(event) {
     last: event.timeLT,
     gaps: null,
     trace: {},
-    layout : {
-      title: title,
-      xaxis1: {
-        rangeselector: selectorOptions,
-        title: 'Time',
-        showticklabels : true
+    yaxis : {
+      yaxis1: {
+        title : titleY,
+        showticklabels : true,
+        side: 'right'
       }
     }
   };
@@ -180,52 +180,61 @@ function createGraph(event) {
     _.extend(graphs[graphKey], presets[graphKey]);
   }
 
-  graphs[graphKey].trace.x = [1];
-  graphs[graphKey].trace.y = [1];
+  graphs[graphKey].trace.x = [];
+  graphs[graphKey].trace.y = [];
 
-
-  if (! bundles[graphs[graphKey].bundleKey] || ! bundles[graphs[graphKey].bundleKey].num) {
-
-
-
-    var graph = document.createElement('div');
-    graph.setAttribute('id', graphs[graphKey].bundleKey);
-    container.appendChild(graph);
-
-    if (bundles[graphs[graphKey].bundleKey]) {
-      graphs[graphKey].title = bundles[graphs[graphKey].bundleKey].title;
-      bundles[graphs[graphKey].bundleKey].num = 1;
-    }
-
-    Plotly.newPlot(graphs[graphKey].bundleKey, [],
-      graphs[graphKey].layout);
-
-
-    Plotly.relayout(graphs[graphKey].bundleKey, {
-      yaxis1 : {
-        title : titleY,
-        side: 'left',
-      }
-    });
-    Plotly.addTraces(graphs[graphKey].bundleKey, [graphs[graphKey].trace]);
-
-  } else {
-
-    var num = ++bundles[graphs[graphKey].bundleKey].num;
-    var update = {};
-    update['yaxis' + num] = {
-      title : titleY,
-      side: 'right',
-      overlaying: 'y'
-    };
-
-    console.log(update, bundles[graphs[graphKey].bundleKey]);
-
-
-    graphs[graphKey].trace['yaxis'] = 'y' + num;
-    Plotly.relayout(graphs[graphKey].bundleKey, update);
-    Plotly.addTraces(graphs[graphKey].bundleKey, [graphs[graphKey].trace]);
+  if (! bundles[graphs[graphKey].bundleKey]) {
+    // create a singleton bundle
+    bundles[graphs[graphKey].bundleKey] = {};
   }
+
+  bundles[graphs[graphKey].bundleKey].layout = {
+    title: title,
+    xaxis1: {
+      rangeselector: selectorOptions,
+      title: 'Time',
+      showticklabels : true
+    }
+  };
+
+  if (! bundles[graphs[graphKey].bundleKey].num) {
+    bundles[graphs[graphKey].bundleKey].num = 1;
+  } else {
+    var num = ++bundles[graphs[graphKey].bundleKey].num;
+    graphs[graphKey].yaxis = {};
+    graphs[graphKey].yaxis['yaxis' + num] = {
+      title : titleY,
+      showticklabels : true,
+      side: 'left',
+      overlaying: 'y1'
+    };
+    graphs[graphKey].trace['yaxis'] = 'y' + num;
+  }
+}
+
+
+var initializedGraph = {};
+var initializedBundle = {};
+
+function initOrRedraw(graphKey) {
+  var graph = graphs[graphKey];
+  if (initializedGraph[graphKey]) {
+    return Plotly.redraw(graph.bundleKey);
+  }
+  initializedGraph[graphKey] = true;
+
+  if (! initializedBundle[graph.bundleKey]) {
+    initializedBundle[graph.bundleKey] = true;
+    var bundle = document.createElement('div');
+    bundle.setAttribute('id', graph.bundleKey);
+    container.appendChild(bundle);
+
+    Plotly.newPlot(graph.bundleKey, [], bundles[graph.bundleKey].layout);
+
+  }
+
+  Plotly.relayout(graphs[graphKey].bundleKey, graph.yaxis);
+  Plotly.addTraces(graphs[graphKey].bundleKey, [graphs[graphKey].trace]);
 
 
 }
@@ -268,7 +277,8 @@ function updateGraph(events) {
     });
 
      Object.keys(toRedraw).forEach(function (graphKey) {
-         Plotly.redraw(graphs[graphKey].bundleKey);
+       console.log()
+       initOrRedraw(graphKey);
      });
 };
 
