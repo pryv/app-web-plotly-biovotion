@@ -1,4 +1,5 @@
-var container = document.getElementById("pryvGraphs");
+/*globals document, pryv, _, Plotly*/
+var container = document.getElementById('pryvGraphs');
 var monitor;
 
 
@@ -19,10 +20,10 @@ if (customRegisterUrl) {
  */
 function getSettingsFromURL() {
   var settings = {
-    username : pryv.utility.urls.parseClientURL().parseQuery()['username'],
-    domain : pryv.utility.urls.parseClientURL().parseQuery()['domain'],
-    auth: pryv.utility.urls.parseClientURL().parseQuery()['auth']
-  }
+    username : pryv.utility.urls.parseClientURL().parseQuery().username,
+    domain : pryv.utility.urls.parseClientURL().parseQuery().domain,
+    auth: pryv.utility.urls.parseClientURL().parseQuery().auth
+  };
 
   if (settings.username && settings.auth) {
     return settings;
@@ -42,24 +43,24 @@ if (settings) {
 
   // Authenticate user
   var authSettings = {
-      requestingAppId: 'appweb-plotly',
-      requestedPermissions: [
-          {
-              streamId: '*',
-              level: 'read'
-          }
-      ],
-      returnURL: false,
-      spanButtonID: 'pryv-button',
-      callbacks: {
-          needSignin: resetGraphs,
-          needValidation: null,
-          signedIn: function (connect) {
-              connect.fetchStructure(function () {
-                  setupMonitor(connect);
-              });
-          }
+    requestingAppId: 'appweb-plotly',
+    requestedPermissions: [
+      {
+        streamId: '*',
+        level: 'read'
       }
+    ],
+    returnURL: false,
+    spanButtonID: 'pryv-button',
+    callbacks: {
+      needSignin: resetGraphs,
+      needValidation: null,
+      signedIn: function (connect) {
+        connect.fetchStructure(function () {
+          setupMonitor(connect);
+        });
+      }
+    }
   };
 
   pryv.Auth.setup(authSettings);
@@ -68,28 +69,28 @@ if (settings) {
 // MONITORING
 // Setup monitoring for remote changes
 function setupMonitor(connection) {
-    var filter = new pryv.Filter();
-    monitor = connection.monitor(filter);
+  var filter = new pryv.Filter();
+  monitor = connection.monitor(filter);
 
-    // should be false by default, will be updated in next lib version
-    // to use fullCache call connection.ensureStructureFetched before
-    monitor.ensureFullCache = false;
-    monitor.initWithPrefetch = 0; // default = 100;
+  // should be false by default, will be updated in next lib version
+  // to use fullCache call connection.ensureStructureFetched before
+  monitor.ensureFullCache = false;
+  monitor.initWithPrefetch = 0; // default = 100;
 
-    // get notified when monitoring starts
-    monitor.addEventListener(pryv.MESSAGES.MONITOR.ON_LOAD, function (events) {
-        updateGraph(events);
+  // get notified when monitoring starts
+  monitor.addEventListener(pryv.MESSAGES.MONITOR.ON_LOAD, function (events) {
+    updateGraph(events);
 
-    });
+  });
 
-    // get notified when data changes
-    monitor.addEventListener(pryv.MESSAGES.MONITOR.ON_EVENT_CHANGE, function (changes) {
-        updateGraph(changes.created);
-    });
+  // get notified when data changes
+  monitor.addEventListener(pryv.MESSAGES.MONITOR.ON_EVENT_CHANGE, function (changes) {
+    updateGraph(changes.created);
+  });
 
-    // start monitoring
-    monitor.start(function (err) {
-    });
+  // start monitoring
+  monitor.start(function (/**err**/) {
+  });
 }
 
 // Traces
@@ -98,7 +99,7 @@ var traces = {};
 
 
 
-var presets = { 
+var presets = {
   'biovotion-bpm_frequency/bpm' : {
     gaps: 30,
     plotKey : 'toto',
@@ -124,7 +125,7 @@ var presets = { 
 
 var plots = {
   toto : {
-     title : 'TOTO'
+    title : 'TOTO'
   }
 };
 
@@ -133,8 +134,8 @@ var plots = {
 
 function getDateString(timestamp) {
   var date = new Date(timestamp);
-  return date.toISOString().substring(0, 10) + ' '
-    + date.toISOString().substring(11, 19) + '.' + date.getMilliseconds();
+  return date.toISOString().substring(0, 10) + ' '  +
+      date.toISOString().substring(11, 19) + '.' + date.getMilliseconds();
 }
 
 function createGraph(event) {
@@ -151,8 +152,8 @@ function createGraph(event) {
 
 
   var title = '';
-  event.stream.ancestors.forEach(function (ancestor) { 
-     title += ancestor.name + '/';
+  event.stream.ancestors.forEach(function (ancestor) {
+    title += ancestor.name + '/';
   });
   title += event.stream.name;
 
@@ -208,7 +209,7 @@ function createGraph(event) {
       side: 'left',
       overlaying: 'y1'
     };
-    traces[traceKey].trace['yaxis'] = 'y' + num;
+    traces[traceKey].trace.yaxis = 'y' + num;
   }
 }
 
@@ -243,54 +244,53 @@ function initOrRedraw(traceKey) {
 
 
 function updateGraph(events) {
-    // needed ?
-    events = events.sort(function (a, b) {
-      return a.time - b.time;
-    });
+  // needed ?
+  events = events.sort(function (a, b) {
+    return a.time - b.time;
+  });
 
-    var toRedraw = {};
+  var toRedraw = {};
 
-    events.map(function (event) {
-      var traceKey = event.streamId + '_' + event.type;
-      if (! traces[traceKey]) { // create New Trace
-        createGraph(event);
-      }
+  events.map(function (event) {
+    var traceKey = event.streamId + '_' + event.type;
+    if (! traces[traceKey]) { // create New Trace
+      createGraph(event);
+    }
 
-      if (! traces[traceKey].ignore) {
+    if (! traces[traceKey].ignore) {
 
 
-        if (traces[traceKey].gaps) {
-          if ((event.timeLT - traces[traceKey].last) > traces[traceKey].gaps * 1000) {
-            traces[traceKey].trace.x.push(getDateString(traces[traceKey].last + 1));
-            traces[traceKey].trace.y.push(null);
-          }
+      if (traces[traceKey].gaps) {
+        if ((event.timeLT - traces[traceKey].last) > traces[traceKey].gaps * 1000) {
+          traces[traceKey].trace.x.push(getDateString(traces[traceKey].last + 1));
+          traces[traceKey].trace.y.push(null);
         }
-
-        traces[traceKey].trace.x.push(getDateString(event.timeLT));
-        traces[traceKey].trace.y.push(event.content);
-
-        traces[traceKey].last = event.timeLT;
-
-        toRedraw[traceKey] = true;
       }
 
-    });
+      traces[traceKey].trace.x.push(getDateString(event.timeLT));
+      traces[traceKey].trace.y.push(event.content);
 
-     Object.keys(toRedraw).forEach(function (traceKey) {
-       console.log()
-       initOrRedraw(traceKey);
-     });
-};
+      traces[traceKey].last = event.timeLT;
+
+      toRedraw[traceKey] = true;
+    }
+
+  });
+
+  Object.keys(toRedraw).forEach(function (traceKey) {
+    initOrRedraw(traceKey);
+  });
+}
 
 
 
 function resetGraphs() {
-    if (monitor) {
-        monitor.destroy();
-    }
-    while (container.firstChild) {
-        container.removeChild(container.firstChild);
-    }
+  if (monitor) {
+    monitor.destroy();
+  }
+  while (container.firstChild) {
+    container.removeChild(container.firstChild);
+  }
 }
 
 
@@ -317,6 +317,6 @@ var selectorOptions = {
     count: 1,
     label: '1y'
   }, {
-    step: 'all',
-  }],
+    step: 'all'
+  }]
 };
