@@ -101,7 +101,7 @@ var traces = {};
 var presets = {
   'biovotion-bpm_frequency/bpm' : {
     gaps: 30,
-    plotKey : 'toto',
+    plotKey : 'bpm-bpw',
     trace: {
       name: 'Heart rate',
       mode: 'lines',
@@ -111,7 +111,7 @@ var presets = {
   },
   'biovotion-bpw_count/generic' : {
     gaps: 30,
-    plotKey : 'toto',
+    plotKey : 'bpm-bpw',
     trace: {
       name: 'Blood P. W.',
       mode: 'lines',
@@ -163,8 +163,8 @@ var presets = {
 };
 
 var plots = {
-  toto : {
-    layout :  { title : 'Multiple' }
+  'bpm-bpw' : {
+    layout :  { title : 'BPM / BPW' }
   }
 };
 
