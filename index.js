@@ -101,7 +101,7 @@ var traces = {};
 var presets = {
   'biovotion-bpm_frequency/bpm' : {
     gaps: 30,
-    //plotKey : 'toto',
+    plotKey : 'toto',
     trace: {
       name: 'Heart rate',
       mode: 'lines',
@@ -109,11 +109,11 @@ var presets = {
       type: 'scatter'
     }
   },
-  'biovotion-bpm_pressure/mmhg' : {
+  'biovotion-object-temp_temperature/c' : {
     gaps: 30,
-    //plotKey : 'toto',
+    plotKey : 'toto',
     trace: {
-      name: 'SPO2',
+      name: 'T°',
       mode: 'lines',
       connectgaps: false,
       type: 'scatter'
@@ -206,7 +206,7 @@ function createTrace(event) {
     };
 
   } else {   // next ones
-    var num = ++plots[traces[traceKey].plotKey].num;
+    var num = plots[traces[traceKey].plotKey].num++;
     traces[traceKey].yaxis = { };
     traces[traceKey].yaxis['yaxis' + num] = {
       title : titleY,
@@ -241,6 +241,7 @@ function initOrRedraw(traceKey) {
 
   Plotly.relayout(traces[traceKey].plotKey, trace.yaxis);
   Plotly.addTraces(traces[traceKey].plotKey, [traces[traceKey].trace]);
+
 
 }
 
