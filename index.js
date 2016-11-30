@@ -119,16 +119,6 @@ var presets = {
       type: 'scatter'
     }
   },
-  'biovotion-energy-expenditure_energy/ws': {
-    //gaps: 30,
-    plotKey : 'toto',
-    trace: {
-      name: 'Energy',
-      mode: 'lines',
-      connectgaps: false,
-      type: 'scatter'
-    }
-  },
   'cirxezp55551ezqyqdwe554wu_frequency/bpm': {
     //gaps: 30,
     plotKey : 'Multiple',
@@ -171,8 +161,6 @@ var presets = {
   }
 
 };
-
-presets = {};
 
 var plots = {
   toto : {
