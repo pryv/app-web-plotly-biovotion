@@ -172,7 +172,7 @@ var presets = {
 
 };
 
-//presets = {};
+presets = {};
 
 var plots = {
   toto : {
