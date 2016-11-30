@@ -148,7 +148,17 @@ var presets = {
       connectgaps: false,
       type: 'scatter'
     }
-  }
+  },
+      'cirzwnqgp55mhzqyqhpi3ph9h_count/steps': {
+        //gaps: 30,
+        plotKey : 'Multiple',
+        trace: {
+          name: 'Steps',
+          mode: 'lines',
+          connectgaps: false,
+          type: 'scatter'
+        }
+      }
 
 };
 
@@ -238,12 +248,14 @@ function createTrace(event) {
   } else {   // next ones
 
     var num = ++plots[traces[traceKey].plotKey].num;
-    traces[traceKey].layout = { };
+    var pos = 1 - + ((num-2) * 0.05);
+    traces[traceKey].layout = {};
     traces[traceKey].layout['yaxis' + num] = {
       title : titleY,
       showticklabels : true,
       side: 'right',
-      overlaying: 'y'
+      overlaying: 'y',
+      position: pos
     };
     traces[traceKey].trace.yaxis = 'y' + num;
   }
