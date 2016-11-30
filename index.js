@@ -197,8 +197,8 @@ function createTrace(event) {
 
   if (! plots[traces[traceKey].plotKey].num) { // first plot
     plots[traces[traceKey].plotKey].num = 1;
-    traces[traceKey].yaxis = {
-      yaxis: {
+    traces[traceKey].layout = {
+      yaxis1: {
         title : titleY,
         showticklabels : true,
         side: 'left'
@@ -207,12 +207,12 @@ function createTrace(event) {
 
   } else {   // next ones
     var num = plots[traces[traceKey].plotKey].num++;
-    traces[traceKey].yaxis = { };
-    traces[traceKey].yaxis['yaxis' + num] = {
+    traces[traceKey].layout = { };
+    traces[traceKey].layout['yaxis' + num] = {
       title : titleY,
       showticklabels : true,
       side: 'right',
-      overlaying: 'y1'
+      overlaying: 'y'
     };
     traces[traceKey].trace.yaxis = 'y' + num;
   }
@@ -239,7 +239,8 @@ function initOrRedraw(traceKey) {
 
   }
 
-  Plotly.relayout(traces[traceKey].plotKey, trace.yaxis);
+  console.log(JSON.stringify(trace.layout));
+  //Plotly.relayout(traces[traceKey].plotKey, trace.layout);
   Plotly.addTraces(traces[traceKey].plotKey, [traces[traceKey].trace]);
 
 
