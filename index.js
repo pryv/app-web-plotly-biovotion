@@ -92,8 +92,8 @@ function setupMonitor(connection) {
     });
 }
 
-// GRAPHS
-var graphs = {};
+// Traces
+var traces = {};
 
 
 
@@ -101,7 +101,7 @@ var graphs = {};
 var presets = { 
   'biovotion-bpm_frequency/bpm' : {
     gaps: 30,
-    bundleKey : 'toto',
+    plotKey : 'toto',
     trace: {
       name: 'Heart rate',
       mode: 'lines',
@@ -111,7 +111,7 @@ var presets = { 
   },
   'biovotion-bpm_pressure/mmhg' : {
     gaps: 30,
-    bundleKey : 'toto',
+    plotKey : 'toto',
     trace: {
       name: 'SPO2',
       mode: 'lines',
@@ -122,7 +122,7 @@ var presets = { 
 
 };
 
-var bundles = {
+var plots = {
   toto : {
      title : 'TOTO'
   }
@@ -138,10 +138,10 @@ function getDateString(timestamp) {
 }
 
 function createGraph(event) {
-  var graphKey = event.streamId + '_' + event.type;
+  var traceKey = event.streamId + '_' + event.type;
 
   if (! pryv.eventTypes.isNumerical(event)) {
-    graphs[graphKey] = { ignore : true};
+    traces[traceKey] = { ignore : true};
     return;
   }
 
@@ -158,10 +158,10 @@ function createGraph(event) {
 
 
 
-  console.log(graphKey);
+  console.log(traceKey);
 
-  graphs[graphKey] = {
-    bundleKey: graphKey,
+  traces[traceKey] = {
+    plotKey: traceKey,
     type: event.type,
     streamId: event.streamId + ' ' + titleY,
     last: event.timeLT,
@@ -176,19 +176,19 @@ function createGraph(event) {
     }
   };
 
-  if (presets[graphKey]) {
-    _.extend(graphs[graphKey], presets[graphKey]);
+  if (presets[traceKey]) {
+    _.extend(traces[traceKey], presets[traceKey]);
   }
 
-  graphs[graphKey].trace.x = [];
-  graphs[graphKey].trace.y = [];
+  traces[traceKey].trace.x = [];
+  traces[traceKey].trace.y = [];
 
-  if (! bundles[graphs[graphKey].bundleKey]) {
-    // create a singleton bundle
-    bundles[graphs[graphKey].bundleKey] = {};
+  if (! plots[traces[traceKey].plotKey]) {
+    // create a singleton plot
+    plots[traces[traceKey].plotKey] = {};
   }
 
-  bundles[graphs[graphKey].bundleKey].layout = {
+  plots[traces[traceKey].plotKey].layout = {
     title: title,
     xaxis1: {
       rangeselector: selectorOptions,
@@ -197,18 +197,18 @@ function createGraph(event) {
     }
   };
 
-  if (! bundles[graphs[graphKey].bundleKey].num) {
-    bundles[graphs[graphKey].bundleKey].num = 1;
+  if (! plots[traces[traceKey].plotKey].num) {
+    plots[traces[traceKey].plotKey].num = 1;
   } else {
-    var num = ++bundles[graphs[graphKey].bundleKey].num;
-    graphs[graphKey].yaxis = {};
-    graphs[graphKey].yaxis['yaxis' + num] = {
+    var num = ++plots[traces[traceKey].plotKey].num;
+    traces[traceKey].yaxis = {};
+    traces[traceKey].yaxis['yaxis' + num] = {
       title : titleY,
       showticklabels : true,
       side: 'left',
       overlaying: 'y1'
     };
-    graphs[graphKey].trace['yaxis'] = 'y' + num;
+    traces[traceKey].trace['yaxis'] = 'y' + num;
   }
 }
 
@@ -216,25 +216,25 @@ function createGraph(event) {
 var initializedGraph = {};
 var initializedBundle = {};
 
-function initOrRedraw(graphKey) {
-  var graph = graphs[graphKey];
-  if (initializedGraph[graphKey]) {
-    return Plotly.redraw(graph.bundleKey);
+function initOrRedraw(traceKey) {
+  var trace = traces[traceKey];
+  if (initializedGraph[traceKey]) {
+    return Plotly.redraw(trace.plotKey);
   }
-  initializedGraph[graphKey] = true;
+  initializedGraph[traceKey] = true;
 
-  if (! initializedBundle[graph.bundleKey]) {
-    initializedBundle[graph.bundleKey] = true;
-    var bundle = document.createElement('div');
-    bundle.setAttribute('id', graph.bundleKey);
-    container.appendChild(bundle);
+  if (! initializedBundle[trace.plotKey]) {
+    initializedBundle[trace.plotKey] = true;
+    var plot = document.createElement('div');
+    plot.setAttribute('id', trace.plotKey);
+    container.appendChild(plot);
 
-    Plotly.newPlot(graph.bundleKey, [], bundles[graph.bundleKey].layout);
+    Plotly.newPlot(trace.plotKey, [], plots[trace.plotKey].layout);
 
   }
 
-  Plotly.relayout(graphs[graphKey].bundleKey, graph.yaxis);
-  Plotly.addTraces(graphs[graphKey].bundleKey, [graphs[graphKey].trace]);
+  Plotly.relayout(traces[traceKey].plotKey, trace.yaxis);
+  Plotly.addTraces(traces[traceKey].plotKey, [traces[traceKey].trace]);
 
 
 }
@@ -251,34 +251,34 @@ function updateGraph(events) {
     var toRedraw = {};
 
     events.map(function (event) {
-      var graphKey = event.streamId + '_' + event.type;
-      if (! graphs[graphKey]) { // create New Trace
+      var traceKey = event.streamId + '_' + event.type;
+      if (! traces[traceKey]) { // create New Trace
         createGraph(event);
       }
 
-      if (! graphs[graphKey].ignore) {
+      if (! traces[traceKey].ignore) {
 
 
-        if (graphs[graphKey].gaps) {
-          if ((event.timeLT - graphs[graphKey].last) > graphs[graphKey].gaps * 1000) {
-            graphs[graphKey].trace.x.push(getDateString(graphs[graphKey].last + 1));
-            graphs[graphKey].trace.y.push(null);
+        if (traces[traceKey].gaps) {
+          if ((event.timeLT - traces[traceKey].last) > traces[traceKey].gaps * 1000) {
+            traces[traceKey].trace.x.push(getDateString(traces[traceKey].last + 1));
+            traces[traceKey].trace.y.push(null);
           }
         }
 
-        graphs[graphKey].trace.x.push(getDateString(event.timeLT));
-        graphs[graphKey].trace.y.push(event.content);
+        traces[traceKey].trace.x.push(getDateString(event.timeLT));
+        traces[traceKey].trace.y.push(event.content);
 
-        graphs[graphKey].last = event.timeLT;
+        traces[traceKey].last = event.timeLT;
 
-        toRedraw[graphKey] = true;
+        toRedraw[traceKey] = true;
       }
 
     });
 
-     Object.keys(toRedraw).forEach(function (graphKey) {
+     Object.keys(toRedraw).forEach(function (traceKey) {
        console.log()
-       initOrRedraw(graphKey);
+       initOrRedraw(traceKey);
      });
 };
 
