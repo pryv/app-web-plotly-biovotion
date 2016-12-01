@@ -1,6 +1,7 @@
 body {
     min-width: 1330px;
     text-align: center;
+    font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 .container {
@@ -50,7 +51,7 @@ body {
 .titleContainer h3 {
     float: left;
     font-size: 25px;
-    margin: 0px 0px 0px 115px;
+    margin: 0px 0px 0px 130px;
 }
 
 .buttonContainer {
