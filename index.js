@@ -33,6 +33,9 @@ function getSettingsFromURL() {
 }
 
 document.onreadystatechange = function () {
+
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('logo-pryv').style.display = 'initial';
   var state = document.readyState;
   if (state == 'complete') {
     var settings = getSettingsFromURL();
@@ -72,6 +75,9 @@ document.onreadystatechange = function () {
 // MONITORING
 // Setup monitoring for remote changes
 function setupMonitor(connection) {
+
+  document.getElementById('loading').style.display = 'initial';
+  document.getElementById('logo-pryv').style.display = 'none';
   var filter = new pryv.Filter({fromTime: 12});
   monitor = connection.monitor(filter);
 
@@ -82,6 +88,9 @@ function setupMonitor(connection) {
 
   // get notified when monitoring starts
   monitor.addEventListener(pryv.MESSAGES.MONITOR.ON_LOAD, function (events) {
+
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('logo-pryv').style.display = 'initial';
     updatePlot(events);
 
   });
@@ -270,8 +279,6 @@ var initializedTraces = {};
 var initializedPlots = {};
 
 function initOrRedraw(traceKey) {
-  document.getElementById('loading').style.display = 'none';
-  document.getElementById('logo-pryv').style.display = 'initial';
 
   var trace = traces[traceKey];
   if (initializedTraces[traceKey]) {
@@ -346,8 +353,6 @@ function updatePlot(events) {
 
 
 function resetPlots() {
-  document.getElementById('loading').style.display = 'initial';
-  document.getElementById('logo-pryv').style.display = 'none';
   if (monitor) {
     monitor.destroy();
   }
