@@ -32,39 +32,42 @@ function getSettingsFromURL() {
   return null;
 }
 
+document.onreadystatechange = function () {
+  var state = document.readyState;
+  if (state == 'complete') {
+    var settings = getSettingsFromURL();
+    if (settings) {
+      var connection = new pryv.Connection(settings);
+      connection.fetchStructure(function () {
+        setupMonitor(connection);
+      });
+    } else {
 
-var settings = getSettingsFromURL();
-if (settings) {
-  var connection = new pryv.Connection(settings);
-  connection.fetchStructure(function () {
-    setupMonitor(connection);
-  });
-} else {
-
-  // Authenticate user
-  var authSettings = {
-    requestingAppId: 'appweb-plotly',
-    requestedPermissions: [
-      {
-        streamId: '*',
-        level: 'read'
-      }
-    ],
-    returnURL: false,
-    spanButtonID: 'pryv-button',
-    callbacks: {
-      needSignin: resetPlots,
-      needValidation: null,
-      signedIn: function (connect) {
-        connect.fetchStructure(function () {
-          setupMonitor(connect);
-        });
-      }
+      // Authenticate user
+      var authSettings = {
+        requestingAppId: 'appweb-plotly',
+        requestedPermissions: [
+          {
+            streamId: '*',
+            level: 'read'
+          }
+        ],
+        returnURL: false,
+        spanButtonID: 'pryv-button',
+        callbacks: {
+          needSignin: resetPlots,
+          needValidation: null,
+          signedIn: function (connect) {
+            connect.fetchStructure(function () {
+              setupMonitor(connect);
+            });
+          }
+        }
+      };
+      pryv.Auth.setup(authSettings);
     }
-  };
-
-  pryv.Auth.setup(authSettings);
-}
+  }
+};
 
 // MONITORING
 // Setup monitoring for remote changes
@@ -230,7 +233,7 @@ function createTrace(event) {
 
 
   plots[traces[traceKey].plotKey].layout.xaxis = {
-    //rangeselector: selectorOptions,
+    rangeselector: selectorOptions,
     title: 'Time',
     showticklabels : true
   };
@@ -266,6 +269,9 @@ var initializedTraces = {};
 var initializedPlots = {};
 
 function initOrRedraw(traceKey) {
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('logo-pryv').style.display = 'initial';
+
   var trace = traces[traceKey];
   if (initializedTraces[traceKey]) {
     return Plotly.redraw(trace.plotKey);
@@ -283,7 +289,6 @@ function initOrRedraw(traceKey) {
 
   Plotly.relayout(traces[traceKey].plotKey, trace.layout);
   Plotly.addTraces(traces[traceKey].plotKey, [traces[traceKey].trace]);
-
 
 }
 
@@ -340,6 +345,8 @@ function updatePlot(events) {
 
 
 function resetPlots() {
+  document.getElementById('loading').style.display = 'initial';
+  document.getElementById('logo-pryv').style.display = 'none';
   if (monitor) {
     monitor.destroy();
   }
@@ -351,7 +358,18 @@ function resetPlots() {
 
 // *** Plotly designs ***  //
 var selectorOptions = {
-  buttons: [{
+  buttons: [
+    {
+      step: 'hour',
+      stepmode: 'backward',
+      count: 1,
+      label: '1h'
+    }, {
+      step: 'day',
+      stepmode: 'backward',
+      count: 1,
+      label: '1d'
+    }, {
     step: 'month',
     stepmode: 'backward',
     count: 1,
@@ -361,11 +379,6 @@ var selectorOptions = {
     stepmode: 'backward',
     count: 6,
     label: '6m'
-  }, {
-    step: 'year',
-    stepmode: 'todate',
-    count: 1,
-    label: 'YTD'
   }, {
     step: 'year',
     stepmode: 'backward',
