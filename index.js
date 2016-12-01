@@ -312,7 +312,7 @@ function updatePlot(events) {
 
     if (! pryv.eventTypes.isNumerical(event)) {
       traces[traceKey] = { ignore : true};
-      console.log('Ignore', event);
+      //console.log('Ignore', event);
       return;
     }
 
