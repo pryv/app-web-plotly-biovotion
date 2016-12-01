@@ -274,10 +274,25 @@ function createTrace(event) {
 var initializedTraces = {};
 var initializedPlots = {};
 
+var lastLastX = 0;
+var gap = 1 * 30 * 1000;
+
 function initOrRedraw(traceKey) {
 
   var trace = traces[traceKey];
   if (initializedTraces[traceKey]) {
+
+    // get last
+
+
+    if (liveRange && (lastX  > (lastLastX + gap))) {
+      var start = lastX - liveRange * 60 * 1000;
+      var stop = lastX + 1 * 30 * 1000;
+      lastLastX = lastX;
+      setAllRanges(getDateString(start), getDateString(stop));
+      previousWasLiverange = true;
+    }
+
     return Plotly.redraw(trace.plotKey);
   }
   initializedTraces[traceKey] = true;
@@ -291,10 +306,14 @@ function initOrRedraw(traceKey) {
     Plotly.newPlot(trace.plotKey, [], plots[trace.plotKey].layout);
   }
 
-  Plotly.relayout(traces[traceKey].plotKey, trace.layout);
-  Plotly.addTraces(traces[traceKey].plotKey, [traces[traceKey].trace]);
+
+  Plotly.relayout(trace.plotKey, trace.layout);
+  Plotly.addTraces(trace.plotKey, [trace.trace]);
 
 }
+
+var lastX = 0;
+var liveRange = 0;
 
 
 var ignoreFrom = ((new Date().getTime())) - (60 * 60 * 24 * 1000 * 10);
@@ -342,6 +361,10 @@ function updatePlot(events) {
         }
       }
 
+      if (event.timeLT > lastX) {
+        lastX = event.timeLT;
+      }
+
       traces[traceKey].trace.x.push(getDateString(event.timeLT));
       traces[traceKey].trace.y.push(event.content);
 
@@ -357,6 +380,19 @@ function updatePlot(events) {
   });
 }
 
+function setAllForRealTime () {
+  var now = new Date().getTime();
+  var start = now - 5 * 60 * 1000;
+  var stop = now + 5 * 60 * 1000;
+  setAllRanges(getDateString(start), getDateString(stop));
+}
+
+function setAllRanges(start, stop) {
+  console.log('***', start, stop);
+  Object.keys(plots).forEach(function (plotKey) {
+    Plotly.relayout(plotKey, {xaxis: {range : [start, stop]}});
+  });
+}
 
 
 function resetPlots() {
@@ -384,10 +420,10 @@ var selectorOptions = {
       label: '1d'
     }, {
     step: 'month',
-    stepmode: 'backward',
-    count: 1,
-    label: '1m'
-  }, {
+      stepmode: 'backward',
+      count: 1,
+      label: '1m'
+     }, {
     step: 'month',
     stepmode: 'backward',
     count: 6,
