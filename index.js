@@ -230,7 +230,7 @@ function createTrace(event) {
 
 
   plots[traces[traceKey].plotKey].layout.xaxis = {
-    //rangeselector: selectorOptions,
+    rangeselector: selectorOptions,
     title: 'Time',
     showticklabels : true
   };
@@ -283,7 +283,6 @@ function initOrRedraw(traceKey) {
 
   Plotly.relayout(traces[traceKey].plotKey, trace.layout);
   Plotly.addTraces(traces[traceKey].plotKey, [traces[traceKey].trace]);
-
 
 }
 
@@ -351,7 +350,18 @@ function resetPlots() {
 
 // *** Plotly designs ***  //
 var selectorOptions = {
-  buttons: [{
+  buttons: [
+    {
+      step: 'hour',
+      stepmode: 'backward',
+      count: 1,
+      label: '1h'
+    }, {
+      step: 'day',
+      stepmode: 'backward',
+      count: 1,
+      label: '1d'
+    }, {
     step: 'month',
     stepmode: 'backward',
     count: 1,
@@ -361,11 +371,6 @@ var selectorOptions = {
     stepmode: 'backward',
     count: 6,
     label: '6m'
-  }, {
-    step: 'year',
-    stepmode: 'todate',
-    count: 1,
-    label: 'YTD'
   }, {
     step: 'year',
     stepmode: 'backward',
