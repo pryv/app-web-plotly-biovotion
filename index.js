@@ -235,6 +235,7 @@ function createTrace(event) {
   plots[traces[traceKey].plotKey].layout.xaxis = {
     rangeselector: selectorOptions,
     title: 'Time',
+    type: 'date',
     showticklabels : true
   };
 
