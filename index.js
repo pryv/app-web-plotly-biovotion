@@ -346,6 +346,8 @@ function updatePlot(events) {
 
 
 function resetPlots() {
+  document.getElementById('loading').style.display = 'initial';
+  document.getElementById('logo-pryv').style.display = 'none';
   if (monitor) {
     monitor.destroy();
   }

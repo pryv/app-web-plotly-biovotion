@@ -4,7 +4,7 @@ body {
 }
 
 .container {
-    width: 410px;
+    width: 500px;
     height: 40px;
     text-align: center;
     border-radius: 6px;
@@ -31,12 +31,6 @@ body {
     transition: opacity 500ms;
 }
 
-.container h3 {
-    float: left;
-    font-size: 25px;
-    margin: 0px 30.5px 0px 30.5px;
-}
-
 .container span {
     float: right;
     opacity: 0.75;
@@ -48,8 +42,19 @@ body {
     transition: opacity 500ms;
 }
 
+.titleContainer {
+    float: left;
+    display: inline-block;
+}
+
+.titleContainer h3 {
+    float: left;
+    font-size: 25px;
+    margin: 0px 0px 0px 115px;
+}
+
 .buttonContainer {
-    padding-top: 3px;
+    padding-top: 1.5px;
     vertical-align: middle;
 }
 
