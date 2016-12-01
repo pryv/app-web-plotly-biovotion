@@ -1,0 +1,68 @@
+body {
+    min-width: 1330px;
+    text-align: center;
+}
+
+.container {
+    width: 410px;
+    height: 40px;
+    text-align: center;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    display: inline-block;
+    background-color: #cdcdcd;
+    padding: 10px 10px 0px 10px;
+}
+
+.container a {
+    float: left;
+    display: inline-block;
+    text-decoration: none;
+}
+
+.container a > img {
+    opacity: 0.75;
+    vertical-align: middle;
+    transition: opacity 500ms;
+}
+
+.container a > img:hover {
+    opacity: 1;
+    transition: opacity 500ms;
+}
+
+.container h3 {
+    float: left;
+    font-size: 25px;
+    margin: 0px 30.5px 0px 30.5px;
+}
+
+.container span {
+    float: right;
+    opacity: 0.75;
+    transition: opacity 500ms;
+}
+
+.container span:hover {
+    opacity: 1;
+    transition: opacity 500ms;
+}
+
+.buttonContainer {
+    padding-top: 3px;
+    vertical-align: middle;
+}
+
+.js-plotly-plot {
+    padding: 5px;
+    width: 1320px;
+    border-radius: 6px;
+    margin-bottom: 5px;
+    display: inline-block;
+    background-color: #cdcdcd;
+}
+
+#logo-pryv {
+    /*opacity: 0;*/
+    display: none;
+}

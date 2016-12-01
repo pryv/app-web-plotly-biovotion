@@ -270,6 +270,8 @@ var initializedPlots = {};
 
 function initOrRedraw(traceKey) {
   document.getElementById('loading').style.display = 'none';
+  document.getElementById('logo-pryv').style.display = 'initial';
+
   var trace = traces[traceKey];
   if (initializedTraces[traceKey]) {
     return Plotly.redraw(trace.plotKey);
