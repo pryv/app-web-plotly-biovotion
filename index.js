@@ -32,39 +32,42 @@ function getSettingsFromURL() {
   return null;
 }
 
+document.onreadystatechange = function () {
+  var state = document.readyState;
+  if (state == 'complete') {
+    var settings = getSettingsFromURL();
+    if (settings) {
+      var connection = new pryv.Connection(settings);
+      connection.fetchStructure(function () {
+        setupMonitor(connection);
+      });
+    } else {
 
-var settings = getSettingsFromURL();
-if (settings) {
-  var connection = new pryv.Connection(settings);
-  connection.fetchStructure(function () {
-    setupMonitor(connection);
-  });
-} else {
-
-  // Authenticate user
-  var authSettings = {
-    requestingAppId: 'appweb-plotly',
-    requestedPermissions: [
-      {
-        streamId: '*',
-        level: 'read'
-      }
-    ],
-    returnURL: false,
-    spanButtonID: 'pryv-button',
-    callbacks: {
-      needSignin: resetPlots,
-      needValidation: null,
-      signedIn: function (connect) {
-        connect.fetchStructure(function () {
-          setupMonitor(connect);
-        });
-      }
+      // Authenticate user
+      var authSettings = {
+        requestingAppId: 'appweb-plotly',
+        requestedPermissions: [
+          {
+            streamId: '*',
+            level: 'read'
+          }
+        ],
+        returnURL: false,
+        spanButtonID: 'pryv-button',
+        callbacks: {
+          needSignin: resetPlots,
+          needValidation: null,
+          signedIn: function (connect) {
+            connect.fetchStructure(function () {
+              setupMonitor(connect);
+            });
+          }
+        }
+      };
+      pryv.Auth.setup(authSettings);
     }
-  };
-
-  pryv.Auth.setup(authSettings);
-}
+  }
+};
 
 // MONITORING
 // Setup monitoring for remote changes
@@ -266,6 +269,7 @@ var initializedTraces = {};
 var initializedPlots = {};
 
 function initOrRedraw(traceKey) {
+  document.getElementById('loading').style.display = 'none';
   var trace = traces[traceKey];
   if (initializedTraces[traceKey]) {
     return Plotly.redraw(trace.plotKey);
