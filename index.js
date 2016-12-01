@@ -192,10 +192,6 @@ function getDateString(timestamp) {
 function createTrace(event) {
   var traceKey = event.streamId + '_' + event.type;
 
-  if (! pryv.eventTypes.isNumerical(event)) {
-    traces[traceKey] = { ignore : true};
-    return;
-  }
 
   var extraType = pryv.eventTypes.extras(event.type);
 
@@ -242,7 +238,7 @@ function createTrace(event) {
 
 
   plots[traces[traceKey].plotKey].layout.xaxis = {
-    rangeselector: selectorOptions,
+    //rangeselector: selectorOptions,
     title: 'Time',
     type: 'date',
     showticklabels : true
@@ -313,17 +309,28 @@ function updatePlot(events) {
 
   events.map(function (event) {
     var traceKey = event.streamId + '_' + event.type;
-    if (! traces[traceKey]) { // create New Trace
-      createTrace(event);
-    }
 
+    if (! pryv.eventTypes.isNumerical(event)) {
+      traces[traceKey] = { ignore : true};
+      console.log('Ignore', event);
+      return;
+    }
 
     if (event.trashed || (ignoreFrom > event.timeLT)) {
     //  console.log(new Date(ignoreFrom), new Date(event.timeLT), ignoreFrom, event.timeLT, ignoreFrom - event.timeLT);
 
-      return;
+    return;
     }
     //console.log(new Date(event.timeLT));
+
+
+    if (! traces[traceKey]) { // create New Trace
+      createTrace(event);
+
+    }
+
+
+
 
     if (! traces[traceKey].ignore) {
 
