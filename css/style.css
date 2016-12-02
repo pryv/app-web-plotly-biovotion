@@ -26,7 +26,7 @@ body {
 
 .container a > img {
     opacity: 0.75;
-    vertical-align: middle;
+    display: block;
     transition: opacity 500ms;
 }
 

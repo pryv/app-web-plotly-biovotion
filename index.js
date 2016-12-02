@@ -35,7 +35,7 @@ function getSettingsFromURL() {
 document.onreadystatechange = function () {
 
   document.getElementById('loading').style.display = 'none';
-  document.getElementById('logo-pryv').style.display = 'initial';
+  document.getElementById('logo-pryv').style.display = 'block';
   var state = document.readyState;
   if (state == 'complete') {
     var settings = getSettingsFromURL();
@@ -76,7 +76,7 @@ document.onreadystatechange = function () {
 // Setup monitoring for remote changes
 function setupMonitor(connection) {
 
-  document.getElementById('loading').style.display = 'initial';
+  document.getElementById('loading').style.display = 'block';
   document.getElementById('logo-pryv').style.display = 'none';
   var filter = new pryv.Filter({fromTime: 12});
   monitor = connection.monitor(filter);
@@ -90,7 +90,7 @@ function setupMonitor(connection) {
   monitor.addEventListener(pryv.MESSAGES.MONITOR.ON_LOAD, function (events) {
 
     document.getElementById('loading').style.display = 'none';
-    document.getElementById('logo-pryv').style.display = 'initial';
+    document.getElementById('logo-pryv').style.display = 'block';
     updatePlot(events);
 
   });
