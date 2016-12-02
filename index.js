@@ -113,6 +113,7 @@ var traces = {};
 var presets = {
   'biovotion-bpm_frequency/bpm' : {
     gaps: 60,
+    titleY: 'Bpm',
     trace: {
       name: 'Heartrate',
       mode: 'lines',
@@ -122,6 +123,7 @@ var presets = {
   },
   'biovotion-spo2_ratio/percent' : {
     gaps: 60,
+    titleY: '%',
     trace: {
       name: 'Oxygen Saturation',
       mode: 'lines',
@@ -129,7 +131,7 @@ var presets = {
       type: 'scatter'
     }
   },
-  'activity' : {
+  'biovotion-activity' : {
     gaps: 60,
     trace: {
       name: 'Activity',
@@ -140,6 +142,7 @@ var presets = {
   },
   'biovotion-bpw_count/generic' : {
     gaps: 60,
+    titleY: 'Count',
     trace: {
       name: 'Blood Pulse Wave',
       mode: 'lines',
@@ -156,8 +159,9 @@ var presets = {
       type: 'scatter'
     }
   },
-  'skin-temperature' : {
+  'biovotion-skin-temperature' : {
     gaps: 60,
+    titleY: '°C',
     trace: {
       name: 'Skin Temperature',
       mode: 'lines',
@@ -175,7 +179,7 @@ var presets = {
       type: 'bar'
     }
   },
-  'heart-rate-variability' : {
+  'biovotion-heart-rate-variability' : {
     gaps: 60,
     trace: {
       name: 'Heart Rate Variability',
@@ -186,6 +190,7 @@ var presets = {
   },
   'biovotion-respiration-rate_frequency/bpm' : {
     gaps: 60,
+    titleY: 'Bpm',
     trace: {
       name: 'Respiratory rate',
       mode: 'lines',
@@ -195,6 +200,7 @@ var presets = {
   },
   'biovotion-energy-expenditure_energy/ws' : {
     gaps: 60,
+    titleY: 'Ws',
     trace: {
       name: 'Energy expenditure',
       mode: 'lines',
