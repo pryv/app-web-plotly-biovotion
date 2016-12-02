@@ -208,7 +208,7 @@ var presets = {
   },
   'biovotion-energy-expenditure_energy/ws' : {
     gaps: 60,
-    titleY: 'Watts per second',
+    titleY: 'Calories per second',
     trace: {
       name: 'Energy expenditure',
       mode: 'lines',
