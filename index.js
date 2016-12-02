@@ -260,9 +260,10 @@ function createTrace(event) {
     };
   }
 
-
+  var currentTime = new Date().getTime();
   plots[traces[traceKey].plotKey].layout.xaxis = {
     rangeselector: selectorOptions,
+    range: [currentTime-(1000*60*60), currentTime],
     title: 'Time',
     type: 'date',
     showticklabels : true
@@ -324,7 +325,7 @@ function initOrRedraw(traceKey) {
   if (! initializedPlots[trace.plotKey]) {
     initializedPlots[trace.plotKey] = true;
     Plotly.newPlot(trace.plotKey, [], plots[trace.plotKey].layout);
-    document.getElementById(trace.plotKey+'-div').style.display = 'inline-block';
+    //document.getElementById(trace.plotKey+'-div').style.display = 'inline-block';
   }
 
 
