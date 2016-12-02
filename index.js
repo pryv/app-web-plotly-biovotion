@@ -418,7 +418,7 @@ function resetPlots() {
     monitor.destroy();
   }
   while (container.firstChild) {
-    container.removeChild(container.firstChild);
+    container.firstChild.style.display = 'none';
   }
 }
 
