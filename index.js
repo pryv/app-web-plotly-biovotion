@@ -324,6 +324,7 @@ function initOrRedraw(traceKey) {
   if (! initializedPlots[trace.plotKey]) {
     initializedPlots[trace.plotKey] = true;
     Plotly.newPlot(trace.plotKey, [], plots[trace.plotKey].layout);
+    document.getElementById(trace.plotKey).style.display = 'initial';
   }
 
 
@@ -367,9 +368,6 @@ function updatePlot(events) {
       createTrace(event);
 
     }
-
-
-
 
     if (! traces[traceKey].ignore) {
 
