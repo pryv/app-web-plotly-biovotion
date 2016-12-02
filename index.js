@@ -178,7 +178,12 @@ var presets = {
       name: 'Steps',
       mode: 'lines',
       connectgaps: false,
-      type: 'bar'
+      type: 'bar',
+      marker: {
+        line: {
+          width: 10,
+        color: '#1F77B4'}
+      }
     }
   },
   'biovotion-heart-rate-var_count/generic' : {
