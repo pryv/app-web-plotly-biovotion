@@ -411,9 +411,6 @@ function resetPlots() {
   if (monitor) {
     monitor.destroy();
   }
-  while (container.firstChild) {
-    container.firstChild.style.display = 'none';
-  }
 }
 
 
