@@ -111,61 +111,91 @@ var traces = {};
 
 
 var presets = {
-  'biovotion-bpm_frequency/bpm' : {
-    gaps: 30,
-    plotKey : 'bpm-bpw',
+  'biovotion-bpm' : {
+    gaps: 60,
     trace: {
-      name: 'Heart rate',
+      name: 'Heartrate',
       mode: 'lines',
       connectgaps: false,
       type: 'scatter'
     }
   },
-  'biovotion-bpw_count/generic' : {
-    gaps: 30,
-    plotKey : 'bpm-bpw',
+  'biovotion-spo2' : {
+    gaps: 60,
     trace: {
-      name: 'Blood P. W.',
+      name: 'Oxygen Saturation',
       mode: 'lines',
       connectgaps: false,
       type: 'scatter'
     }
   },
-  'cirxezp55551ezqyqdwe554wu_frequency/bpm': {
-    //gaps: 30,
-    plotKey : 'Multiple',
+  '???' : {
+    gaps: 60,
     trace: {
-      name: 'BPM',
+      name: 'Activity',
       mode: 'lines',
       connectgaps: false,
       type: 'scatter'
     }
   },
-  'cirxez1sb5519zqyqod67labt_density/mmol-l': {
-    //gaps: 30,
-    plotKey : 'Multiple',
+  'biovotion-bpw' : {
+    gaps: 60,
     trace: {
-      name: 'Glycemia',
+      name: 'Blood Pulse Wave',
       mode: 'lines',
       connectgaps: false,
       type: 'scatter'
     }
   },
-  'cirzws1yp55mxzqyqr0s8qtt6_energy/cal': {
-    //gaps: 30,
-    plotKey : 'Multiple',
+  'biovotion-blood-perfusion' : {
+    gaps: 60,
     trace: {
-      name: 'Calories',
+      name: 'Perfusion Index',
       mode: 'lines',
       connectgaps: false,
       type: 'scatter'
     }
   },
-  'cirzwnqgp55mhzqyqhpi3ph9h_count/steps': {
-    //gaps: 30,
-    plotKey : 'Multiple',
+  '???' : {
+    gaps: 60,
+    trace: {
+      name: 'Skin Temperature',
+      mode: 'lines',
+      connectgaps: false,
+      type: 'scatter'
+    }
+  },
+  'biovotion-steps' : {
+    gaps: 60,
     trace: {
       name: 'Steps',
+      mode: 'lines',
+      connectgaps: false,
+      type: 'scatter'
+    }
+  },
+  '???' : {
+    gaps: 60,
+    trace: {
+      name: 'Heart Rate Variability',
+      mode: 'lines',
+      connectgaps: false,
+      type: 'scatter'
+    }
+  },
+  'biovotion-respiration-rate' : {
+    gaps: 60,
+    trace: {
+      name: 'Respiratory rate',
+      mode: 'lines',
+      connectgaps: false,
+      type: 'scatter'
+    }
+  },
+  'biovotion-energy-expenditure' : {
+    gaps: 60,
+    trace: {
+      name: 'Energy expenditure',
       mode: 'lines',
       connectgaps: false,
       type: 'scatter'
@@ -175,13 +205,7 @@ var presets = {
 };
 
 var plots = {
-  'bpm-bpw' : {
-    layout :  { title : 'BPM / BPW' }
-  }
 };
-
-
-
 
 function getDateString(timestamp) {
   var date = new Date(timestamp);
