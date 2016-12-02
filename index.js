@@ -230,7 +230,9 @@ function createTrace(event) {
   var extraType = pryv.eventTypes.extras(event.type);
 
   var titleY = extraType.symbol ? extraType.symbol : event.type;
-  titleY = presets[traceKey].titleY || titleY;
+  if(presets[traceKey] && presets[traceKey].titleY) {
+    titleY = presets[traceKey].titleY;
+  }
 
   //console.log(traceKey);
 
