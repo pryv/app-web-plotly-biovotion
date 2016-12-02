@@ -82,6 +82,11 @@ body {
     display: inline-block;
 }
 
+.pryvLogo > a {
+    width: 30px;
+    height: 30px;
+}
+
 .title {
     height: 30px;
     display: inline-block;
