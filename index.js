@@ -325,7 +325,7 @@ function initOrRedraw(traceKey) {
   if (! initializedPlots[trace.plotKey]) {
     initializedPlots[trace.plotKey] = true;
     Plotly.newPlot(trace.plotKey, [], plots[trace.plotKey].layout);
-    //document.getElementById(trace.plotKey+'-div').style.display = 'inline-block';
+    document.getElementById(trace.plotKey+'-div').style.display = 'unset';
   }
 
 
