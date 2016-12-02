@@ -111,7 +111,7 @@ var traces = {};
 
 
 var presets = {
-  'biovotion-bpm' : {
+  'biovotion-bpm_frequency/bpm' : {
     gaps: 60,
     trace: {
       name: 'Heartrate',
@@ -120,7 +120,7 @@ var presets = {
       type: 'scatter'
     }
   },
-  'biovotion-spo2' : {
+  'biovotion-spo2_ratio/percent' : {
     gaps: 60,
     trace: {
       name: 'Oxygen Saturation',
@@ -129,7 +129,7 @@ var presets = {
       type: 'scatter'
     }
   },
-  '???' : {
+  'activity' : {
     gaps: 60,
     trace: {
       name: 'Activity',
@@ -138,7 +138,7 @@ var presets = {
       type: 'scatter'
     }
   },
-  'biovotion-bpw' : {
+  'biovotion-bpw_count/generic' : {
     gaps: 60,
     trace: {
       name: 'Blood Pulse Wave',
@@ -156,7 +156,7 @@ var presets = {
       type: 'scatter'
     }
   },
-  '???' : {
+  'skin-temperature' : {
     gaps: 60,
     trace: {
       name: 'Skin Temperature',
@@ -165,7 +165,7 @@ var presets = {
       type: 'scatter'
     }
   },
-  'biovotion-steps' : {
+  'biovotion-steps_frequency/hz' : {
     gaps: 60,
     trace: {
       name: 'Steps',
@@ -174,7 +174,7 @@ var presets = {
       type: 'scatter'
     }
   },
-  '???' : {
+  'heart-rate-variability' : {
     gaps: 60,
     trace: {
       name: 'Heart Rate Variability',
@@ -183,7 +183,7 @@ var presets = {
       type: 'scatter'
     }
   },
-  'biovotion-respiration-rate' : {
+  'biovotion-respiration-rate_frequency/bpm' : {
     gaps: 60,
     trace: {
       name: 'Respiratory rate',
@@ -192,7 +192,7 @@ var presets = {
       type: 'scatter'
     }
   },
-  'biovotion-energy-expenditure' : {
+  'biovotion-energy-expenditure_energy/ws' : {
     gaps: 60,
     trace: {
       name: 'Energy expenditure',
@@ -323,10 +323,6 @@ function initOrRedraw(traceKey) {
 
   if (! initializedPlots[trace.plotKey]) {
     initializedPlots[trace.plotKey] = true;
-    var plot = document.createElement('div');
-    plot.setAttribute('id', trace.plotKey);
-    container.appendChild(plot);
-
     Plotly.newPlot(trace.plotKey, [], plots[trace.plotKey].layout);
   }
 
