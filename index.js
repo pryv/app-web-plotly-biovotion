@@ -171,7 +171,12 @@ var presets = {
       name: 'Steps',
       mode: 'lines',
       connectgaps: false,
-      type: 'scatter'
+      type: 'bar',
+      marker: {
+        line: {
+          width: 6
+        }
+      }
     }
   },
   'heart-rate-variability' : {
@@ -249,14 +254,8 @@ function createTrace(event) {
   traces[traceKey].trace.y = [];
 
   if (! plots[traces[traceKey].plotKey]) {
-    // create a singleton plot
-    var title = '';
-    event.stream.ancestors.forEach(function (ancestor) {
-      title += ancestor.name + '/';
-    });
-    title += event.stream.name;
     plots[traces[traceKey].plotKey] = {
-      layout : { title : title }
+      layout : {}
     };
   }
 
