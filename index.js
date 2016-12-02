@@ -328,8 +328,14 @@ function initOrRedraw(traceKey) {
 
   if (! initializedPlots[trace.plotKey]) {
     initializedPlots[trace.plotKey] = true;
+    if(document.getElementById(trace.plotKey+'-div')) {
+      document.getElementById(trace.plotKey+'-div').style.display = 'unset';
+    } else {
+      var plot = document.createElement('div');
+      plot.setAttribute('id', trace.plotKey);
+      container.appendChild(plot);
+    }
     Plotly.newPlot(trace.plotKey, [], plots[trace.plotKey].layout);
-    document.getElementById(trace.plotKey+'-div').style.display = 'unset';
   }
 
 
