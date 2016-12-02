@@ -1,17 +1,16 @@
 body {
     text-align: center;
+    min-width: 730px;
     font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 .container {
-    width: 500px;
-    height: 40px;
-    text-align: center;
+    width: 400px;
+    padding: 10px;
     border-radius: 6px;
-    margin-bottom: 15px;
+    margin-bottom: 5px;
     display: inline-block;
     background-color: #cdcdcd;
-    padding: 10px 10px 0px 10px;
 }
 
 .container a {
@@ -42,15 +41,27 @@ body {
     transition: opacity 500ms;
 }
 
+.topBar {
+    height: 30px;
+    margin-bottom: 5px;
+}
+
+.subContainer {
+    height: 50px;
+    padding: 5px;
+    border-radius: 6px;
+    background-color: #e6e6e6;
+}
+
 .titleContainer {
     float: left;
-    display: inline-block;
+    height: 30px;
 }
 
 .titleContainer h3 {
     float: left;
+    margin: 0px;
     font-size: 25px;
-    margin: 0px 0px 0px 130px;
 }
 
 .buttonContainer {
@@ -58,29 +69,53 @@ body {
     vertical-align: middle;
 }
 
+.pryvLogo {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+    display: inline-block;
+}
+
+.title {
+    height: 30px;
+    display: inline-block;
+}
+
 .logo {
-    top: 10px;
-    left: 10px;
+    float: right;
     height: 40px;
     padding: 5px;
-    position: absolute;
     border-radius: 6px;
     background-color: #cdcdcd;
 }
 
 .logo img {
-    max-width: 200px;
+    max-width: 100px;
     height: 40px;
 }
 
-.js-plotly-plot {
-    padding: 5px;
-    border-radius: 6px;
-    margin-bottom: 5px;
-    display: inline-block;
-    background-color: #cdcdcd;
+.choice {
+    float: left;
+    padding: 10px;
+    margin-top: 4px;
 }
 
 #logo-pryv {
     display: none;
 }
+
+.graphContainer {
+    padding: 5px;
+    border-radius: 6px;
+    margin: 2.5px 2.5px 0px 2.5px;
+    display: inline-block;
+    background-color: #cdcdcd;
+}
+
+/*.js-plotly-plot {*/
+    /*padding: 5px;*/
+    /*border-radius: 6px;*/
+    /*margin: 2.5px 2.5px 0px 2.5px;*/
+    /*display: inline-block;*/
+    /*background-color: #cdcdcd;*/
+/*}*/

@@ -5,26 +5,63 @@
     <title>App Web Plotly</title>
 </head>
 <body>
-<div class="logo">
-  <img src="img/custom-logo.png" id="customLogo">
-</div>
-<label><input type='checkbox' onclick="liveRange = this.checked ? 5 : 0;">Follow LiveFeed</label>
-
 
 <div class="container">
-    <div class="titleContainer">
-        <a href="http://api.pryv.com/" target="_blank">
-            <img src="img/loader.gif" id="loading"><img>
-            <img src="img/logo-pryv.png" id="logo-pryv"><img>
-        </a>
-        <h3>App Web Plotly</h3>
+    <div class="topBar">
+        <div class="titleContainer">
+            <div class="pryvLogo">
+                <a href="http://api.pryv.com/" target="_blank">
+                    <img src="img/loader.gif" id="loading"><img>
+                    <img src="img/logo-pryv.png" id="logo-pryv"><img>
+                </a>
+            </div>
+            <div class="title">
+                <h3>App Web Plotly</h3>
+            </div>
+        </div>
+        <div class="buttonContainer">
+            <span id="pryv-button"></span>
+        </div>
     </div>
-    <div class="buttonContainer">
-        <span id="pryv-button"></span>
+    <div class="subContainer">
+        <div class="logo">
+            <img src="img/custom-logo.png" id="customLogo">
+        </div>
+        <div class="choice">
+            <label>
+                <input type='checkbox' onclick="liveRange = this.checked ? 5 : 0;">Follow LiveFeed
+            </label>
+        </div>
     </div>
 </div>
 
 <div id="pryvGraphs"></div>
+
+<div class="graphContainer">
+    <div id="biovotion-bpm"></div>
+</div>
+<div class="graphContainer">
+    <div id="biovotion-spo2"></div>
+</div>
+<div class="graphContainer">
+    <div id="activity"></div>
+</div>
+<div class="graphContainer">
+    <div id="biovotion-blood-perfusion"></div>
+</div>
+<div class="graphContainer">
+    <div id="biovotion-steps"></div>
+</div>
+<div class="graphContainer">
+    <div id="heart-rate-variability"></div>
+</div>
+<div class="graphContainer">
+    <div id="biovotion-respiration-rate"></div>
+</div>
+<div class="graphContainer">
+    <div id="biovotion-energy-expenditure"></div>
+</div>
+
 </body>
 <link href="css/style.css" rel="stylesheet" type="text/css"/>
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
