@@ -131,8 +131,9 @@ var presets = {
       type: 'scatter'
     }
   },
-  'biovotion-activity' : {
+  'biovotion-activity_count/generic' : {
     gaps: 60,
+    titleY: 'Count',
     trace: {
       name: 'Activity',
       mode: 'lines',
@@ -152,6 +153,7 @@ var presets = {
   },
   'biovotion-blood-perfusion' : {
     gaps: 60,
+    titleY: 'Count',
     trace: {
       name: 'Perfusion Index',
       mode: 'lines',
@@ -159,7 +161,7 @@ var presets = {
       type: 'scatter'
     }
   },
-  'biovotion-skin-temperature' : {
+  'biovotion-skin-temp_temperature/c' : {
     gaps: 60,
     titleY: '°C',
     trace: {
@@ -179,8 +181,9 @@ var presets = {
       type: 'bar'
     }
   },
-  'biovotion-heart-rate-variability' : {
+  'biovotion-heart-rate-var_count/generic' : {
     gaps: 60,
+    titleY: 'Count',
     trace: {
       name: 'Heart Rate Variability',
       mode: 'lines',
@@ -229,7 +232,7 @@ function createTrace(event) {
   var titleY = extraType.symbol ? extraType.symbol : event.type;
   titleY = presets[traceKey].titleY || titleY;
 
-  console.log(traceKey);
+  //console.log(traceKey);
 
   traces[traceKey] = {
     plotKey: traceKey,
@@ -406,7 +409,7 @@ function setAllForRealTime () {
 }
 
 function setAllRanges(start, stop) {
-  console.log('***', start, stop);
+  //console.log('***', start, stop);
   Object.keys(plots).forEach(function (plotKey) {
     Plotly.relayout(plotKey, {xaxis: {range : [start, stop]}});
   });
