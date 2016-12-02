@@ -78,7 +78,7 @@ function setupMonitor(connection) {
 
   document.getElementById('loading').style.display = 'block';
   document.getElementById('logo-pryv').style.display = 'none';
-  var filter = new pryv.Filter({fromTime: 12});
+  var filter = new pryv.Filter({limit: 1000});
   monitor = connection.monitor(filter);
 
   // should be false by default, will be updated in next lib version
