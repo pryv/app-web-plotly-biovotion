@@ -172,12 +172,7 @@ var presets = {
       name: 'Steps',
       mode: 'lines',
       connectgaps: false,
-      type: 'bar',
-      marker: {
-        line: {
-          width: 6
-        }
-      }
+      type: 'bar'
     }
   },
   'heart-rate-variability' : {
