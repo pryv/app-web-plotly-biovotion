@@ -1,7 +1,12 @@
+@font-face {
+    font-family: 'Lato';
+    src: url('./font/Lato-Light.ttf');
+}
+
 body {
     text-align: center;
     min-width: 500px;
-    font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: 'Lato', sans-serif;
 }
 
 .container {
@@ -122,7 +127,7 @@ body {
     display: inline-block;
     border-radius: 6px 6px 0px 0px;
     background-color: #cdcdcd;
-    width: 300px;
+    width: 350px;
     height: 48px;
     padding: 0px 5px 0px 5px;
 }
@@ -132,7 +137,7 @@ body {
     margin: 0px;
     height: 43px;
     font-size: 25px;
-    padding-top: 5px;
+    padding-top: 3px;
     line-height: 48px;
 }
 
