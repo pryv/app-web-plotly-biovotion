@@ -113,7 +113,7 @@ var traces = {};
 var presets = {
   'biovotion-bpm_frequency/bpm' : {
     gaps: 60,
-    titleY: 'Bpm',
+    titleY: 'Beats per minute',
     trace: {
       name: 'Heartrate',
       mode: 'lines',
@@ -133,7 +133,7 @@ var presets = {
   },
   'biovotion-activity_count/generic' : {
     gaps: 60,
-    titleY: 'Count',
+    titleY: 'Units',
     trace: {
       name: 'Activity',
       mode: 'lines',
@@ -143,7 +143,7 @@ var presets = {
   },
   'biovotion-bpw_count/generic' : {
     gaps: 60,
-    titleY: 'Count',
+    titleY: 'Units',
     trace: {
       name: 'Blood Pulse Wave',
       mode: 'lines',
@@ -153,7 +153,7 @@ var presets = {
   },
   'biovotion-blood-perfusion' : {
     gaps: 60,
-    titleY: 'Count',
+    titleY: 'Units',
     trace: {
       name: 'Perfusion Index',
       mode: 'lines',
@@ -183,7 +183,7 @@ var presets = {
   },
   'biovotion-heart-rate-var_count/generic' : {
     gaps: 60,
-    titleY: 'Count',
+    titleY: 'Units',
     trace: {
       name: 'Heart Rate Variability',
       mode: 'lines',
@@ -193,7 +193,7 @@ var presets = {
   },
   'biovotion-respiration-rate_frequency/bpm' : {
     gaps: 60,
-    titleY: 'Bpm',
+    titleY: 'Breaths per minute',
     trace: {
       name: 'Respiratory rate',
       mode: 'lines',
@@ -203,7 +203,7 @@ var presets = {
   },
   'biovotion-energy-expenditure_energy/ws' : {
     gaps: 60,
-    titleY: 'Ws',
+    titleY: 'Watts per second',
     trace: {
       name: 'Energy expenditure',
       mode: 'lines',
