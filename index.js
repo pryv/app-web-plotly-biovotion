@@ -167,6 +167,7 @@ var presets = {
   },
   'biovotion-steps_frequency/hz' : {
     gaps: 60,
+    titleY: 'Step per second',
     trace: {
       name: 'Steps',
       mode: 'lines',
@@ -225,7 +226,7 @@ function createTrace(event) {
   var extraType = pryv.eventTypes.extras(event.type);
 
   var titleY = extraType.symbol ? extraType.symbol : event.type;
-
+  titleY = presets[traceKey].titleY || titleY;
 
   console.log(traceKey);
 
@@ -259,10 +260,8 @@ function createTrace(event) {
     };
   }
 
-  var currentTime = new Date().getTime();
   plots[traces[traceKey].plotKey].layout.xaxis = {
     rangeselector: selectorOptions,
-    range: [currentTime-(1000*60*60), currentTime],
     title: 'Time',
     type: 'date',
     showticklabels : true
