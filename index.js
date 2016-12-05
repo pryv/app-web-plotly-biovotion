@@ -107,7 +107,6 @@ function setupMonitor(connection) {
 
 // Traces
 var traces = {};
-
 var presets = {};
 var plots = {};
 
@@ -150,8 +149,13 @@ function createTrace(event) {
   traces[traceKey].trace.y = [];
 
   if (! plots[traces[traceKey].plotKey]) {
+    var title = '';
+    event.stream.ancestors.forEach(function (ancestor) {
+      title += ancestor.name + '/';
+    });
+    title += event.stream.name;
     plots[traces[traceKey].plotKey] = {
-      layout : {}
+      layout : { title : title }
     };
   }
 
