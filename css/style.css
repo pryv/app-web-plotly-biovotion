@@ -1,12 +1,7 @@
-@font-face {
-    font-family: 'Lato';
-    src: url('../font/Lato-Light.ttf');
-}
-
 body {
     text-align: center;
     min-width: 500px;
-    font-family: 'Lato', sans-serif;
+    font-family: sans-serif;
 }
 
 .container {
@@ -90,19 +85,6 @@ body {
 .title {
     height: 30px;
     display: inline-block;
-}
-
-.logo {
-    float: right;
-    height: 40px;
-    padding: 5px;
-    border-radius: 6px;
-    background-color: #cdcdcd;
-}
-
-.logo img {
-    max-width: 100px;
-    height: 40px;
 }
 
 .choice {

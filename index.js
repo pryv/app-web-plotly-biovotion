@@ -108,119 +108,8 @@ function setupMonitor(connection) {
 // Traces
 var traces = {};
 
-
-
-var presets = {
-  'biovotion-bpm_frequency/bpm' : {
-    gaps: 60,
-    titleY: 'Beats per minute',
-    trace: {
-      name: 'Heartrate',
-      mode: 'lines',
-      connectgaps: false,
-      type: 'scatter'
-    }
-  },
-  'biovotion-spo2_ratio/percent' : {
-    gaps: 60,
-    titleY: '%',
-    trace: {
-      name: 'Oxygen Saturation',
-      mode: 'lines',
-      connectgaps: false,
-      type: 'scatter'
-    }
-  },
-  'biovotion-activity_count/generic' : {
-    gaps: 60,
-    titleY: 'Units',
-    trace: {
-      name: 'Activity',
-      mode: 'lines',
-      connectgaps: false,
-      type: 'scatter'
-    }
-  },
-  'biovotion-bpw_count/generic' : {
-    gaps: 60,
-    titleY: 'Units',
-    trace: {
-      name: 'Blood Pulse Wave',
-      mode: 'lines',
-      connectgaps: false,
-      type: 'scatter'
-    }
-  },
-  'biovotion-blood-perfusion' : {
-    gaps: 60,
-    titleY: 'Units',
-    trace: {
-      name: 'Perfusion Index',
-      mode: 'lines',
-      connectgaps: false,
-      type: 'scatter'
-    }
-  },
-  'biovotion-skin-temp_temperature/c' : {
-    gaps: 60,
-    titleY: '°C',
-    trace: {
-      name: 'Skin Temperature',
-      mode: 'lines',
-      connectgaps: false,
-      type: 'scatter'
-    }
-  },
-  'biovotion-steps_frequency/hz' : {
-    gaps: 60,
-    titleY: 'Step per second',
-    trace: {
-      name: 'Steps',
-      mode: 'lines',
-      connectgaps: false,
-      type: 'bar',
-      marker: {
-        line: {
-          width: 10,
-        color: '#1F77B4'}
-      }
-    }
-  },
-  'biovotion-heart-rate-var_count/generic' : {
-    gaps: 60,
-    titleY: 'Units',
-    trace: {
-      name: 'Heart Rate Variability',
-      mode: 'lines',
-      connectgaps: false,
-      type: 'scatter'
-    }
-  },
-  'biovotion-respiration-rate_frequency/bpm' : {
-    gaps: 60,
-    titleY: 'Breaths per minute',
-    trace: {
-      name: 'Respiratory rate',
-      mode: 'lines',
-      connectgaps: false,
-      type: 'scatter'
-    }
-  },
-  'biovotion-energy-expenditure_energy/ws' : {
-    gaps: 60,
-    titleY: 'Calories per second',
-    trace: {
-      name: 'Energy expenditure',
-      mode: 'lines',
-      connectgaps: false,
-      type: 'scatter'
-    }
-  }
-
-};
-
-var plots = {
-};
+var presets = {};
+var plots = {};
 
 function getDateString(timestamp) {
   var date = new Date(timestamp);
@@ -230,16 +119,12 @@ function getDateString(timestamp) {
 
 function createTrace(event) {
   var traceKey = event.streamId + '_' + event.type;
-
-
   var extraType = pryv.eventTypes.extras(event.type);
-
   var titleY = extraType.symbol ? extraType.symbol : event.type;
+
   if(presets[traceKey] && presets[traceKey].titleY) {
     titleY = presets[traceKey].titleY;
   }
-
-  //console.log(traceKey);
 
   traces[traceKey] = {
     plotKey: traceKey,
@@ -261,7 +146,6 @@ function createTrace(event) {
     _.extend(traces[traceKey], presets[traceKey]);
   }
 
-  /** add holders for data **/
   traces[traceKey].trace.x = [];
   traces[traceKey].trace.y = [];
 
@@ -288,8 +172,7 @@ function createTrace(event) {
       }
     };
 
-  } else {   // next ones
-
+  } else {
     var num = ++plots[traces[traceKey].plotKey].num;
     var pos = 1 - + ((num-2) * 0.05);
     traces[traceKey].layout = {};
@@ -304,7 +187,6 @@ function createTrace(event) {
   }
 }
 
-
 var initializedTraces = {};
 var initializedPlots = {};
 
@@ -315,10 +197,6 @@ function initOrRedraw(traceKey) {
 
   var trace = traces[traceKey];
   if (initializedTraces[traceKey]) {
-
-    // get last
-
-
     if (liveRange && (lastX  > (lastLastX + gap))) {
       var start = lastX - liveRange * 60 * 1000;
       var stop = lastX + 1 * 30 * 1000;
@@ -333,20 +211,15 @@ function initOrRedraw(traceKey) {
 
   if (! initializedPlots[trace.plotKey]) {
     initializedPlots[trace.plotKey] = true;
-    if(document.getElementById(trace.plotKey+'-div')) {
-      document.getElementById(trace.plotKey+'-div').style.display = 'unset';
-    } else {
-      var plot = document.createElement('div');
-      plot.setAttribute('id', trace.plotKey);
-      container.appendChild(plot);
-    }
+    var plot = document.createElement('div');
+    plot.setAttribute('id', trace.plotKey);
+    container.appendChild(plot);
+
     Plotly.newPlot(trace.plotKey, [], plots[trace.plotKey].layout);
   }
 
-
   Plotly.relayout(trace.plotKey, trace.layout);
   Plotly.addTraces(trace.plotKey, [trace.trace]);
-
 }
 
 var lastX = 0;
@@ -356,7 +229,7 @@ var liveRange = 0;
 var ignoreFrom = ((new Date().getTime())) - (60 * 60 * 24 * 1000 * 10);
 
 function updatePlot(events) {
-  // needed ?
+  // Needed ?
   events = events.sort(function (a, b) {
     return a.time - b.time;
   });
@@ -368,26 +241,18 @@ function updatePlot(events) {
 
     if (! pryv.eventTypes.isNumerical(event)) {
       traces[traceKey] = { ignore : true};
-      //console.log('Ignore', event);
       return;
     }
 
     if (event.trashed || (ignoreFrom > event.timeLT)) {
-    //  console.log(new Date(ignoreFrom), new Date(event.timeLT), ignoreFrom, event.timeLT, ignoreFrom - event.timeLT);
-
     return;
     }
-    //console.log(new Date(event.timeLT));
 
-
-    if (! traces[traceKey]) { // create New Trace
+    if (! traces[traceKey]) {
       createTrace(event);
-
     }
 
     if (! traces[traceKey].ignore) {
-
-
       if (traces[traceKey].gaps) {
         if ((event.timeLT - traces[traceKey].last) > traces[traceKey].gaps * 1000) {
           traces[traceKey].trace.x.push(getDateString(traces[traceKey].last + 1));
@@ -401,7 +266,6 @@ function updatePlot(events) {
 
       traces[traceKey].trace.x.push(getDateString(event.timeLT));
       traces[traceKey].trace.y.push(event.content);
-
       traces[traceKey].last = event.timeLT;
 
       toRedraw[traceKey] = true;
@@ -422,7 +286,6 @@ function setAllForRealTime () {
 }
 
 function setAllRanges(start, stop) {
-  //console.log('***', start, stop);
   Object.keys(plots).forEach(function (plotKey) {
     Plotly.relayout(plotKey, {xaxis: {range : [start, stop]}});
   });
