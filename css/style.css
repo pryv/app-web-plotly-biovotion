@@ -65,8 +65,8 @@ body {
 }
 
 .buttonContainer {
-    height: 28.5px;
-    padding-top: 1.5px;
+    height: 28px;
+    padding-top: 1px;
     vertical-align: middle;
 }
 
@@ -97,28 +97,6 @@ body {
     display: none;
 }
 
-.graphContainer {
-    display: none;
-}
-
-.js-plotly-plot {
-    padding: 5px;
-    margin-top: -5px;
-    border-radius: 6px;
-    margin-bottom: 5px;
-    display: inline-block;
-    background-color: #cdcdcd;
-}
-
-.graphTitle {
-    display: inline-block;
-    border-radius: 6px 6px 0px 0px;
-    background-color: #cdcdcd;
-    width: 350px;
-    height: 48px;
-    padding: 0px 5px 0px 5px;
-}
-
 .graphTitle h4 {
     float: left;
     margin: 0px;
@@ -131,21 +109,4 @@ body {
 .graphTitle img {
     float: left;
     margin-right: 5px;
-}
-
-.graphLogo {
-    width: 48px;
-    height: 48px;
-    display: inline-block;
-}
-
-.graphName {
-    height: 48px;
-    display: inline-block;
-}
-
-
-.graphTitleDiv {
-    height: 48px;
-    display: inline-block;
 }
