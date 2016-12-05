@@ -1,17 +1,21 @@
+@font-face {
+    font-family: 'Lato';
+    src: url('../font/Lato-Light.ttf');
+}
+
 body {
     text-align: center;
-    font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    min-width: 500px;
+    font-family: 'Lato', sans-serif;
 }
 
 .container {
-    width: 500px;
-    height: 40px;
-    text-align: center;
+    width: 400px;
+    padding: 10px;
     border-radius: 6px;
     margin-bottom: 15px;
     display: inline-block;
     background-color: #cdcdcd;
-    padding: 10px 10px 0px 10px;
 }
 
 .container a {
@@ -22,7 +26,7 @@ body {
 
 .container a > img {
     opacity: 0.75;
-    vertical-align: middle;
+    display: block;
     transition: opacity 500ms;
 }
 
@@ -42,45 +46,124 @@ body {
     transition: opacity 500ms;
 }
 
+.topBar {
+    height: 30px;
+    margin-bottom: 5px;
+}
+
+.subContainer {
+    height: 50px;
+    padding: 5px;
+    border-radius: 6px;
+    background-color: #e6e6e6;
+}
+
 .titleContainer {
     float: left;
-    display: inline-block;
+    height: 30px;
 }
 
 .titleContainer h3 {
     float: left;
+    margin: 0px;
     font-size: 25px;
-    margin: 0px 0px 0px 130px;
 }
 
 .buttonContainer {
+    height: 28.5px;
     padding-top: 1.5px;
     vertical-align: middle;
 }
 
+.pryvLogo {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+    display: inline-block;
+}
+
+.pryvLogo > a {
+    width: 30px;
+    height: 30px;
+}
+
+.title {
+    height: 30px;
+    display: inline-block;
+}
+
 .logo {
-    top: 10px;
-    left: 10px;
+    float: right;
     height: 40px;
     padding: 5px;
-    position: absolute;
     border-radius: 6px;
     background-color: #cdcdcd;
 }
 
 .logo img {
-    max-width: 200px;
+    max-width: 100px;
     height: 40px;
+}
+
+.choice {
+    float: left;
+    padding: 10px;
+    margin-top: 4px;
+}
+
+#logo-pryv {
+    display: none;
+}
+
+.graphContainer {
+    display: none;
 }
 
 .js-plotly-plot {
     padding: 5px;
+    margin-top: -5px;
     border-radius: 6px;
     margin-bottom: 5px;
     display: inline-block;
     background-color: #cdcdcd;
 }
 
-#logo-pryv {
-    display: none;
+.graphTitle {
+    display: inline-block;
+    border-radius: 6px 6px 0px 0px;
+    background-color: #cdcdcd;
+    width: 350px;
+    height: 48px;
+    padding: 0px 5px 0px 5px;
+}
+
+.graphTitle h4 {
+    float: left;
+    margin: 0px;
+    height: 43px;
+    font-size: 25px;
+    padding-top: 3px;
+    line-height: 48px;
+}
+
+.graphTitle img {
+    float: left;
+    margin-right: 5px;
+}
+
+.graphLogo {
+    width: 48px;
+    height: 48px;
+    display: inline-block;
+}
+
+.graphName {
+    height: 48px;
+    display: inline-block;
+}
+
+
+.graphTitleDiv {
+    height: 48px;
+    display: inline-block;
 }

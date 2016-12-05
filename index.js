@@ -35,7 +35,7 @@ function getSettingsFromURL() {
 document.onreadystatechange = function () {
 
   document.getElementById('loading').style.display = 'none';
-  document.getElementById('logo-pryv').style.display = 'initial';
+  document.getElementById('logo-pryv').style.display = 'block';
   var state = document.readyState;
   if (state == 'complete') {
     var settings = getSettingsFromURL();
@@ -76,7 +76,7 @@ document.onreadystatechange = function () {
 // Setup monitoring for remote changes
 function setupMonitor(connection) {
 
-  document.getElementById('loading').style.display = 'initial';
+  document.getElementById('loading').style.display = 'block';
   document.getElementById('logo-pryv').style.display = 'none';
   var filter = new pryv.Filter({limit: 10000});
   monitor = connection.monitor(filter);
@@ -90,7 +90,7 @@ function setupMonitor(connection) {
   monitor.addEventListener(pryv.MESSAGES.MONITOR.ON_LOAD, function (events) {
 
     document.getElementById('loading').style.display = 'none';
-    document.getElementById('logo-pryv').style.display = 'initial';
+    document.getElementById('logo-pryv').style.display = 'block';
     updatePlot(events);
 
   });
@@ -112,60 +112,105 @@ var traces = {};
 
 var presets = {
   'biovotion-bpm_frequency/bpm' : {
-    gaps: 30,
-    plotKey : 'bpm-bpw',
+    gaps: 60,
+    titleY: 'Beats per minute',
     trace: {
-      name: 'Heart rate',
+      name: 'Heartrate',
+      mode: 'lines',
+      connectgaps: false,
+      type: 'scatter'
+    }
+  },
+  'biovotion-spo2_ratio/percent' : {
+    gaps: 60,
+    titleY: '%',
+    trace: {
+      name: 'Oxygen Saturation',
+      mode: 'lines',
+      connectgaps: false,
+      type: 'scatter'
+    }
+  },
+  'biovotion-activity_count/generic' : {
+    gaps: 60,
+    titleY: 'Units',
+    trace: {
+      name: 'Activity',
       mode: 'lines',
       connectgaps: false,
       type: 'scatter'
     }
   },
   'biovotion-bpw_count/generic' : {
-    gaps: 30,
-    plotKey : 'bpm-bpw',
+    gaps: 60,
+    titleY: 'Units',
     trace: {
-      name: 'Blood P. W.',
+      name: 'Blood Pulse Wave',
       mode: 'lines',
       connectgaps: false,
       type: 'scatter'
     }
   },
-  'cirxezp55551ezqyqdwe554wu_frequency/bpm': {
-    //gaps: 30,
-    plotKey : 'Multiple',
+  'biovotion-blood-perfusion' : {
+    gaps: 60,
+    titleY: 'Units',
     trace: {
-      name: 'BPM',
+      name: 'Perfusion Index',
       mode: 'lines',
       connectgaps: false,
       type: 'scatter'
     }
   },
-  'cirxez1sb5519zqyqod67labt_density/mmol-l': {
-    //gaps: 30,
-    plotKey : 'Multiple',
+  'biovotion-skin-temp_temperature/c' : {
+    gaps: 60,
+    titleY: '°C',
     trace: {
-      name: 'Glycemia',
+      name: 'Skin Temperature',
       mode: 'lines',
       connectgaps: false,
       type: 'scatter'
     }
   },
-  'cirzws1yp55mxzqyqr0s8qtt6_energy/cal': {
-    //gaps: 30,
-    plotKey : 'Multiple',
-    trace: {
-      name: 'Calories',
-      mode: 'lines',
-      connectgaps: false,
-      type: 'scatter'
-    }
-  },
-  'cirzwnqgp55mhzqyqhpi3ph9h_count/steps': {
-    //gaps: 30,
-    plotKey : 'Multiple',
+  'biovotion-steps_frequency/hz' : {
+    gaps: 60,
+    titleY: 'Step per second',
     trace: {
       name: 'Steps',
+      mode: 'lines',
+      connectgaps: false,
+      type: 'bar',
+      marker: {
+        line: {
+          width: 10,
+        color: '#1F77B4'}
+      }
+    }
+  },
+  'biovotion-heart-rate-var_count/generic' : {
+    gaps: 60,
+    titleY: 'Units',
+    trace: {
+      name: 'Heart Rate Variability',
+      mode: 'lines',
+      connectgaps: false,
+      type: 'scatter'
+    }
+  },
+  'biovotion-respiration-rate_frequency/bpm' : {
+    gaps: 60,
+    titleY: 'Breaths per minute',
+    trace: {
+      name: 'Respiratory rate',
+      mode: 'lines',
+      connectgaps: false,
+      type: 'scatter'
+    }
+  },
+  'biovotion-energy-expenditure_energy/ws' : {
+    gaps: 60,
+    titleY: 'Calories per second',
+    trace: {
+      name: 'Energy expenditure',
       mode: 'lines',
       connectgaps: false,
       type: 'scatter'
@@ -175,13 +220,7 @@ var presets = {
 };
 
 var plots = {
-  'bpm-bpw' : {
-    layout :  { title : 'BPM / BPW' }
-  }
 };
-
-
-
 
 function getDateString(timestamp) {
   var date = new Date(timestamp);
@@ -196,9 +235,11 @@ function createTrace(event) {
   var extraType = pryv.eventTypes.extras(event.type);
 
   var titleY = extraType.symbol ? extraType.symbol : event.type;
+  if(presets[traceKey] && presets[traceKey].titleY) {
+    titleY = presets[traceKey].titleY;
+  }
 
-
-  console.log(traceKey);
+  //console.log(traceKey);
 
   traces[traceKey] = {
     plotKey: traceKey,
@@ -225,17 +266,10 @@ function createTrace(event) {
   traces[traceKey].trace.y = [];
 
   if (! plots[traces[traceKey].plotKey]) {
-    // create a singleton plot
-    var title = '';
-    event.stream.ancestors.forEach(function (ancestor) {
-      title += ancestor.name + '/';
-    });
-    title += event.stream.name;
     plots[traces[traceKey].plotKey] = {
-      layout : { title : title }
+      layout : {}
     };
   }
-
 
   plots[traces[traceKey].plotKey].layout.xaxis = {
     rangeselector: selectorOptions,
@@ -299,10 +333,13 @@ function initOrRedraw(traceKey) {
 
   if (! initializedPlots[trace.plotKey]) {
     initializedPlots[trace.plotKey] = true;
-    var plot = document.createElement('div');
-    plot.setAttribute('id', trace.plotKey);
-    container.appendChild(plot);
-
+    if(document.getElementById(trace.plotKey+'-div')) {
+      document.getElementById(trace.plotKey+'-div').style.display = 'unset';
+    } else {
+      var plot = document.createElement('div');
+      plot.setAttribute('id', trace.plotKey);
+      container.appendChild(plot);
+    }
     Plotly.newPlot(trace.plotKey, [], plots[trace.plotKey].layout);
   }
 
@@ -348,9 +385,6 @@ function updatePlot(events) {
 
     }
 
-
-
-
     if (! traces[traceKey].ignore) {
 
 
@@ -388,7 +422,7 @@ function setAllForRealTime () {
 }
 
 function setAllRanges(start, stop) {
-  console.log('***', start, stop);
+  //console.log('***', start, stop);
   Object.keys(plots).forEach(function (plotKey) {
     Plotly.relayout(plotKey, {xaxis: {range : [start, stop]}});
   });
@@ -398,9 +432,6 @@ function setAllRanges(start, stop) {
 function resetPlots() {
   if (monitor) {
     monitor.destroy();
-  }
-  while (container.firstChild) {
-    container.removeChild(container.firstChild);
   }
 }
 
