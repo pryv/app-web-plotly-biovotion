@@ -230,7 +230,7 @@ var lastX = 0;
 var liveRange = 0;
 
 
-var ignoreFrom = ((new Date().getTime())) - (60 * 60 * 24 * 1000 * 10);
+var ignoreFrom = 0; // ((new Date().getTime())) - (60 * 60 * 24 * 1000 * 10);
 
 function updatePlot(events) {
   // Needed ?
