@@ -24,9 +24,6 @@
         </div>
     </div>
     <div class="subContainer">
-        <div class="logo">
-            <img src="img/custom-logo.png" id="customLogo">
-        </div>
         <div class="choice">
             <label>
                 <input type='checkbox' onclick="liveRange = this.checked ? 5 : 0;">Follow LiveFeed
@@ -36,149 +33,10 @@
 </div><br>
 
 <div id="pryvGraphs">
-    <div class="graphContainer" id="biovotion-bpm_frequency/bpm-div">
-        <div class="graphTitle">
-            <div class="graphLogo">
-                <img src="./img/hr-icon.png">
-            </div>
-            <div class="graphName">
-                <h4>Heartrate</h4>
-            </div>
-        </div>
-        <div class="graphView">
-            <div id="biovotion-bpm_frequency/bpm"></div>
-        </div>
-    </div>
-
-    <div class="graphContainer" id="biovotion-activity_count/generic-div">
-        <div class="graphTitle">
-            <div class="graphLogo">
-                <img src="./img/activity-icon.png">
-            </div>
-            <div class="graphName">
-                <h4>Activity</h4>
-            </div>
-        </div>
-        <div class="graphView">
-            <div id="biovotion-activity_count/generic"></div>
-        </div>
-    </div>
-
-    <div class="graphContainer" id="biovotion-bpw_count/generic-div">
-        <div class="graphTitle">
-            <div class="graphLogo">
-                <img src="./img/bpw-icon.png">
-            </div>
-            <div class="graphName">
-                <h4>Blood Pulse Wave</h4>
-            </div>
-        </div>
-        <div class="graphView">
-            <div id="biovotion-bpw_count/generic"></div>
-        </div>
-    </div>
-
-    <div class="graphContainer" id="biovotion-spo2_ratio/percent-div">
-        <div class="graphTitle">
-            <div class="graphLogo">
-                <img src="./img/spo2-icon.png">
-            </div>
-            <div class="graphName">
-                <h4>Oxygen Saturation</h4>
-            </div>
-        </div>
-        <div class="graphView">
-            <div id="biovotion-spo2_ratio/percent"></div>
-        </div>
-    </div>
-
-    <div class="graphContainer" id="biovotion-blood-perfusion-div">
-        <div class="graphTitle">
-            <div class="graphLogo">
-                <img src="./img/blood_perfusion-icon.png">
-            </div>
-            <div class="graphName">
-                <h4>Perfusion Index</h4>
-            </div>
-        </div>
-        <div class="graphView">
-            <div id="biovotion-blood-perfusion"></div>
-        </div>
-    </div>
-
-    <div class="graphContainer" id="biovotion-skin-temp_temperature/c-div">
-        <div class="graphTitle">
-            <div class="graphLogo">
-                <img src="./img/temperature-icon.png">
-            </div>
-            <div class="graphName">
-                <h4>Skin Temperature</h4>
-            </div>
-        </div>
-        <div class="graphView">
-            <div id="biovotion-skin-temp_temperature/c"></div>
-        </div>
-    </div>
-
-    <div class="graphContainer" id="biovotion-steps_frequency/hz-div">
-        <div class="graphTitle">
-            <div class="graphLogo">
-                <img src="./img/steps-icon.png">
-            </div>
-            <div class="graphName">
-                <h4>Steps</h4>
-            </div>
-        </div>
-        <div class="graphView">
-            <div id="biovotion-steps_frequency/hz"></div>
-        </div>
-    </div>
-
-    <div class="graphContainer" id="biovotion-heart-rate-var_count/generic-div">
-        <div class="graphTitle">
-            <div class="graphLogo">
-                <img src="./img/hr-var-icon.png">
-            </div>
-            <div class="graphName">
-                <h4>Heart Rate Variability</h4>
-            </div>
-        </div>
-        <div class="graphView">
-            <div id="biovotion-heart-rate-var_count/generic"></div>
-        </div>
-    </div>
-
-    <div class="graphContainer" id="biovotion-respiration-rate_frequency/bpm-div">
-        <div class="graphTitle">
-            <div class="graphLogo">
-                <img src="./img/resp_rate-icon.png">
-            </div>
-            <div class="graphName">
-                <h4>Respiration Rate</h4>
-            </div>
-        </div>
-        <div class="graphView">
-            <div id="biovotion-respiration-rate_frequency/bpm"></div>
-        </div>
-    </div>
-
-    <div class="graphContainer" id="biovotion-energy-expenditure_energy/ws-div">
-        <div class="graphTitle">
-            <div class="graphLogo">
-                <img src="./img/energy-expendure-icon.png">
-            </div>
-            <div class="graphName">
-                <h4>Energy Expenditure</h4>
-            </div>
-        </div>
-        <div class="graphView">
-            <div id="biovotion-energy-expenditure_energy/ws"></div>
-        </div>
-    </div>
 </div>
 </body>
 <link href="css/style.css" rel="stylesheet" type="text/css"/>
-<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script src="https://cdn.plot.ly/plotly-1.21.0.min.js"></script>
 <script src="pryv.js"></script>
 <script src="https://cdn.jsdelivr.net/lodash/4.17.2/lodash.min.js"></script>
 <script src="index.js"></script>
