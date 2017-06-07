@@ -64,6 +64,12 @@ body {
     font-size: 25px;
 }
 
+.sharingLink label {
+  float: left;
+  margin: 0px;
+  font-size: 10px;
+}
+
 .buttonContainer {
     height: 28px;
     padding-top: 1px;

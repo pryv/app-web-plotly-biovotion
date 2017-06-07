@@ -32,6 +32,14 @@ function getSettingsFromURL() {
   return null;
 }
 
+function setupShareLink(connect) {
+  var urlLabel = document.getElementById('sharelink');
+  urlLabel.innerHTML = ('' + document.location).split('?')[0] +
+    '?username=' + connect.username +
+    '&domain=' + connect.domain +
+    '&auth=' + connect.auth;
+}
+
 document.onreadystatechange = function () {
 
   document.getElementById('loading').style.display = 'none';
@@ -75,6 +83,7 @@ document.onreadystatechange = function () {
 // MONITORING
 // Setup monitoring for remote changes
 function setupMonitor(connection) {
+  setupShareLink(connection);
 
   document.getElementById('loading').style.display = 'block';
   document.getElementById('logo-pryv').style.display = 'none';
