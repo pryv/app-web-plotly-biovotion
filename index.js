@@ -95,6 +95,18 @@ function setupMonitor(connection) {
   monitor.ensureFullCache = false;
   monitor.initWithPrefetch = 0; // default = 100;
 
+  // get presets from stream structure
+  connection.streams.walkTree({}, function (stream) { 
+    if (stream.clientData && stream.clientData['app-web-plotly']) {
+      Object.keys(stream.clientData['app-web-plotly']).forEach(function(eventType) {
+        var traceKey = stream.id + '_' + eventType;
+        presets[traceKey] = stream.clientData['app-web-plotly'][eventType];
+      });
+    }
+    console.log('Stream:' + stream.id + '->' + JSON.stringify(stream.clientData));
+  });
+
+
   // get notified when monitoring starts
   monitor.addEventListener(pryv.MESSAGES.MONITOR.ON_LOAD, function (events) {
 
