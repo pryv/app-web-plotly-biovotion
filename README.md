@@ -16,6 +16,7 @@ You can specifiy per-eventType trace properties. All fields are optionals.
 
 - `plotKey`: Traces with the same plotKey will be drawn on the same graph.
 - `titleY`: Specify the title of Y axis.
+- `ignore`: true | false to ignore the display of this graph
 - `trace`: Plotly trace property,see: [https://plot.ly/javascript-graphing-library/reference/#scatter](https://plot.ly/javascript-graphing-library/reference/#scatter)
 for reference.`
 
@@ -27,6 +28,7 @@ Example:
       "count/generic": {
         "plotKey": "Multiple",
         "titleY": "Z dimension"
+        "ignore": false,
         "trace": {
           "type": "scatter",
           "name": "Z",

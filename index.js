@@ -171,10 +171,16 @@ function createTrace(event) {
 
   if (! plots[traces[traceKey].plotKey]) {
     var title = '';
-    event.stream.ancestors.forEach(function (ancestor) {
-      title += ancestor.name + '/';
-    });
-    title += event.stream.name;
+
+    if (presets[traceKey] && presets[traceKey].plotKey) {
+      // name per plotKey
+      title = presets[traceKey].plotKey;
+    } else { // take stream path
+      event.stream.ancestors.forEach(function (ancestor) {
+        title += ancestor.name + '/';
+      });
+      title += event.stream.name;
+    }
     plots[traces[traceKey].plotKey] = {
       layout : { title : title }
     };
