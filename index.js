@@ -7,7 +7,7 @@ var monitor;
  * retrieve the registerURL from URL parameters
  */
 function getRegisterURL() {
-  return pryv.utility.urls.parseClientURL().parseQuery()['pryv-reg'];
+  return pryv.utility.urls.parseClientURL().parseQuery()['reg-pryv'] || pryv.utility.urls.parseClientURL().parseQuery()['pryv-reg'];
 }
 
 var customRegisterUrl = getRegisterURL();
