@@ -253,8 +253,18 @@ function initOrRedraw(traceKey) {
   Plotly.addTraces(trace.plotKey, [trace.trace]);
 }
 
+
+/**
+ * retrieve the registerURL from URL parameters
+ */
+function getLiveRangeURL() {
+  return pryv.utility.urls.parseClientURL().parseQuery()['liverange'];
+}
+
+
 var lastX = 0;
-var liveRange = 0;
+var liveRange = getLiveRangeURL() || 0;
+
 
 
 var ignoreFrom = 0; // ((new Date().getTime())) - (60 * 60 * 24 * 1000 * 10);
