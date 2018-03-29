@@ -2,7 +2,7 @@
 var container = document.getElementById('pryvGraphs');
 var monitor;
 
-var pullSerieFrequencyMs = 1000;
+var pullSerieFrequencyMs = 100;
 
 
 /**
@@ -313,7 +313,7 @@ function updatePlot(events) {
         return;
       }
 
-      createTrace(event.stream, type, event.timeLT);
+      createTrace(event.stream, type, event.time);
     }
 
 
@@ -325,34 +325,53 @@ function updatePlot(events) {
 
     if (! isHF) { // Standard event
       if (traces[traceKey].gaps) {
-        if ((event.timeLT - traces[traceKey].last) > traces[traceKey].gaps * 1000) {
+        if ((event.time - traces[traceKey].last) > traces[traceKey].gaps * 1000) {
           traces[traceKey].trace.x.push(getDateString(traces[traceKey].last + 1));
           traces[traceKey].trace.y.push(null);
         }
       }
 
-      if (event.timeLT > lastX) {
-        lastX = event.timeLT;
-      }
 
-
-      traces[traceKey].trace.x.push(getDateString(event.timeLT));
-      traces[traceKey].trace.y.push(event.content);
-      traces[traceKey].last = event.timeLT;
-
+      addValueToTrace(traceKey, event.time, event.timeLT, event.content);
       toRedraw[traceKey] = true;
 
     } else { // HF event
 
       if (! traces[traceKey].activeHF ||
-         (traces[traceKey].activeHF.timeLT < event.timeLT)) {
+         (traces[traceKey].activeHF.time < event.time)) {
         // new activeHF event
         traces[traceKey].activeHF = event;
 
         if (! traces[traceKey].pull) {
           traces[traceKey].pull = function () {
             console.log("pulling serie on", traces[traceKey].activeHF.id);
-            setTimeout(traces[traceKey].pull, pullSerieFrequencyMs);
+            fetchSerie(traces[traceKey].activeHF, traces[traceKey].last, function (err, res) {
+
+
+              if (res.points && res.points.length > 0) {
+                var l = res.points.length;
+                for (var i = 0; i < l; i++) {
+                  var timeLT = traces[traceKey].activeHF.connection.getLocalTime(res.points[i][0]);
+                  addValueToTrace(traceKey, res.points[i][0], timeLT, res.points[i][1]);
+
+
+
+                }
+
+
+
+                console.log("received" + res.points.length);
+
+              }
+
+              initOrRedraw(traceKey);
+              setTimeout(traces[traceKey].pull, pullSerieFrequencyMs);
+            });
+
+
+
+
+
           };
 
           traces[traceKey].pull();
@@ -369,6 +388,37 @@ function updatePlot(events) {
     initOrRedraw(traceKey);
   });
 }
+
+/**
+* Add a value to a trace IF after last one
+*/
+function addValueToTrace(traceKey, time, timeLT, value) {
+
+
+  if (traces[traceKey].last && traces[traceKey].last < time) {
+
+    if (timeLT > lastX) {
+      lastX = timeLT;
+    }
+
+    console.log(time - traces[traceKey].last, value, getDateString(timeLT));
+    traces[traceKey].trace.x.push(getDateString(timeLT));
+    traces[traceKey].trace.y.push(value);
+    traces[traceKey].last = time;
+
+
+  }
+}
+
+function fetchSerie(event, fromTime, done) {
+  event.connection.request({
+    withoutCredentials: true,
+    method: 'GET',
+    path: '/events/' + event.id + '/series?fromTime=' + (fromTime + 0.0001),
+    callback: done});
+}
+
+
 
 function setAllForRealTime () {
   var now = new Date().getTime();

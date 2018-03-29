@@ -7844,7 +7844,7 @@ Connection.prototype.request = function (params) {
     throw new Error(CC.Errors.CALLBACK_IS_NOT_A_FUNCTION);
   }
   var headers =  { 'authorization': this.auth };
-  var withoutCredentials = false;
+  var withoutCredentials = params.withoutCredentials ? true : false;
   var payload = JSON.stringify({});
   if (params.jsonData && !params.isFile) {
     payload = JSON.stringify(params.jsonData);
@@ -18172,6 +18172,7 @@ module.exports = {
  * @param {Boolean} [pack.withoutCredentials = false]
  */
 module.exports = function (pack)  {
+ 
   pack.info = pack.info || '';
   var parseResult = pack.parseResult || 'json';
 
@@ -18229,7 +18230,6 @@ module.exports = function (pack)  {
       url = httpMode + pack.host + pack.path;
   xhr.open(pack.method, url, pack.async);
   xhr.withCredentials = pack.withoutCredentials ? false : true;
-
 
   xhr.onreadystatechange = function () {
     detail += ' xhrstatus:' + xhr.statusText;
