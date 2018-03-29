@@ -2,6 +2,8 @@
 var container = document.getElementById('pryvGraphs');
 var monitor;
 
+var pullSerieFrequencyMs = 1000;
+
 
 /**
  * retrieve the registerURL from URL parameters
@@ -127,9 +129,9 @@ function setupMonitor(connection) {
 }
 
 // Traces
-var traces = {};
+var traces = {}; // Container for "traces" .. lines
 var presets = {};
-var plots = {};
+var plots = {}; // Index that keeps a link tracekey => plot
 
 function getDateString(timestamp) {
   var date = new Date(timestamp);
@@ -137,20 +139,23 @@ function getDateString(timestamp) {
     date.toISOString().substring(11, 19) + '.' + date.getMilliseconds();
 }
 
-function createTrace(event) {
-  var traceKey = event.streamId + '_' + event.type;
-  var extraType = pryv.eventTypes.extras(event.type);
-  var titleY = extraType.symbol ? extraType.symbol : event.type;
+/**
+ * Initialize a Trace
+ */
+function createTrace(stream, type, initTime) {
+  var traceKey = stream.id + '_' + type;
+  var extraType = pryv.eventTypes.extras(type);
+  var titleY = extraType.symbol ? extraType.symbol : type;
 
-  if(presets[traceKey] && presets[traceKey].titleY) {
+  if (presets[traceKey] && presets[traceKey].titleY) {
     titleY = presets[traceKey].titleY;
   }
 
   traces[traceKey] = {
     plotKey: traceKey,
-    type: event.type,
-    streamId: event.streamId + ' ' + titleY,
-    last: event.timeLT,
+    type: type,
+    streamId: stream.id + ' ' + titleY,
+    last: initTime,
     gaps: null,
     trace: {},
     yaxis : {
@@ -169,23 +174,27 @@ function createTrace(event) {
   traces[traceKey].trace.x = [];
   traces[traceKey].trace.y = [];
 
-  if (! plots[traces[traceKey].plotKey]) {
+  //--- Assign Trace to A plot or create new plot
+
+  //-- does the desired plot exist ?
+  if (! plots[traces[traceKey].plotKey]) {  // no create Plot
     var title = '';
 
     if (presets[traceKey] && presets[traceKey].plotKey) {
       // name per plotKey
       title = presets[traceKey].plotKey;
     } else { // take stream path
-      event.stream.ancestors.forEach(function (ancestor) {
+      stream.ancestors.forEach(function (ancestor) {
         title += ancestor.name + '/';
       });
-      title += event.stream.name;
+      title += stream.name;
     }
     plots[traces[traceKey].plotKey] = {
       layout : { title : title }
     };
   }
 
+  // add trace xAxis
   plots[traces[traceKey].plotKey].layout.xaxis = {
     rangeselector: selectorOptions,
     title: 'Time',
@@ -193,6 +202,8 @@ function createTrace(event) {
     showticklabels : true
   };
 
+  // ADD Yaxis
+  // if first plot
   if (! plots[traces[traceKey].plotKey].num) { // first plot
     plots[traces[traceKey].plotKey].num = 1;
     traces[traceKey].layout = {
@@ -203,9 +214,9 @@ function createTrace(event) {
       }
     };
 
-  } else {
+  } else {  // if not first plot
     var num = ++plots[traces[traceKey].plotKey].num;
-    var pos = 1 - + ((num-2) * 0.05);
+    var pos = 1 - + ((num - 2) * 0.05);
     traces[traceKey].layout = {};
     traces[traceKey].layout['yaxis' + num] = {
       title : titleY,
@@ -278,22 +289,41 @@ function updatePlot(events) {
   var toRedraw = {};
 
   events.map(function (event) {
-    var traceKey = event.streamId + '_' + event.type;
-
-    if (! pryv.eventTypes.isNumerical(event)) {
-      traces[traceKey] = { ignore : true};
+    // Ignore trashed events and out of timer
+    if (event.trashed || (ignoreFrom > event.timeLT)) {
       return;
     }
 
-    if (event.trashed || (ignoreFrom > event.timeLT)) {
-    return;
+
+    var type = event.type;
+    var isHF = false;
+    if (event.type.startsWith('series:')) {
+      type = event.type.substr(7);
+      console.log("Z1", type);
+      isHF = true;
     }
 
+
+    var traceKey = event.streamId + '_' + type;
+
+    // create trace if not exists
     if (! traces[traceKey]) {
-      createTrace(event);
+      if (! pryv.eventTypes.isNumerical(type)) {   // ignore future event of this type
+        traces[traceKey] = {ignore: true};
+        return;
+      }
+
+      createTrace(event.stream, type, event.timeLT);
     }
 
-    if (! traces[traceKey].ignore) {
+
+    if (traces[traceKey].ignore) {
+      return;
+    }
+
+
+
+    if (! isHF) { // Standard event
       if (traces[traceKey].gaps) {
         if ((event.timeLT - traces[traceKey].last) > traces[traceKey].gaps * 1000) {
           traces[traceKey].trace.x.push(getDateString(traces[traceKey].last + 1));
@@ -305,12 +335,33 @@ function updatePlot(events) {
         lastX = event.timeLT;
       }
 
+
       traces[traceKey].trace.x.push(getDateString(event.timeLT));
       traces[traceKey].trace.y.push(event.content);
       traces[traceKey].last = event.timeLT;
 
       toRedraw[traceKey] = true;
+
+    } else { // HF event
+
+      if (! traces[traceKey].activeHF ||
+         (traces[traceKey].activeHF.timeLT < event.timeLT)) {
+        // new activeHF event
+        traces[traceKey].activeHF = event;
+
+        if (! traces[traceKey].pull) {
+          traces[traceKey].pull = function () {
+            console.log("pulling serie on", traces[traceKey].activeHF.id);
+            setTimeout(traces[traceKey].pull, pullSerieFrequencyMs);
+          };
+
+          traces[traceKey].pull();
+        }
+
+      }
     }
+
+
 
   });
 
