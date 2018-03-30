@@ -134,9 +134,7 @@ var presets = {};
 var plots = {}; // Index that keeps a link tracekey => plot
 
 function getDateString(timestamp) {
-  var date = new Date(timestamp);
-  return date.toISOString().substring(0, 10) + ' '  +
-    date.toISOString().substring(11, 19) + '.' + date.getMilliseconds();
+  return new Date(timestamp);
 }
 
 /**
@@ -395,7 +393,7 @@ function updatePlot(events) {
 function addValueToTrace(traceKey, time, timeLT, value) {
 
 
-  if (traces[traceKey].last && traces[traceKey].last < time) {
+  if (! traces[traceKey].last || traces[traceKey].last < time) {
 
     if (timeLT > lastX) {
       lastX = timeLT;
@@ -407,6 +405,8 @@ function addValueToTrace(traceKey, time, timeLT, value) {
     traces[traceKey].last = time;
 
 
+  } else {
+    console.log('Skiping point in past for trace:' + traceKey + ' ' + getDateString(timeLT ));
   }
 }
 
