@@ -3,6 +3,7 @@ var container = document.getElementById('pryvGraphs');
 var monitor;
 
 var pullSerieFrequencyMs = 100;
+var pullSerieFrequencyMsIfEmpty = 1000;
 
 
 /**
@@ -133,9 +134,17 @@ var traces = {}; // Container for "traces" .. lines
 var presets = {};
 var plots = {}; // Index that keeps a link tracekey => plot
 
-function getDateString(timestamp) {
+function getDate(timestamp) {
   return new Date(timestamp);
 }
+
+
+function getDateString(timestamp) {
+  var tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
+  var localISOTime = (new Date(timestamp - tzoffset)).toISOString().slice(0, -1);
+  return localISOTime.substring(0, 10) + ' '  + localISOTime.substring(11);
+}
+
 
 /**
  * Initialize a Trace
@@ -324,7 +333,7 @@ function updatePlot(events) {
     if (! isHF) { // Standard event
       if (traces[traceKey].gaps) {
         if ((event.time - traces[traceKey].last) > traces[traceKey].gaps * 1000) {
-          traces[traceKey].trace.x.push(getDateString(traces[traceKey].last + 1));
+          traces[traceKey].trace.x.push(getDate(traces[traceKey].last + 1));
           traces[traceKey].trace.y.push(null);
         }
       }
@@ -345,6 +354,7 @@ function updatePlot(events) {
             console.log("pulling serie on", traces[traceKey].activeHF.id);
             fetchSerie(traces[traceKey].activeHF, traces[traceKey].last, function (err, res) {
 
+              var nextPullIn = pullSerieFrequencyMsIfEmpty;
 
               if (res.points && res.points.length > 0) {
                 var l = res.points.length;
@@ -357,13 +367,13 @@ function updatePlot(events) {
                 }
 
 
-
-                console.log("received" + res.points.length);
+                nextPullIn = pullSerieFrequencyMs;
+                console.log('received' + res.points.length);
 
               }
 
               initOrRedraw(traceKey);
-              setTimeout(traces[traceKey].pull, pullSerieFrequencyMs);
+              setTimeout(traces[traceKey].pull, nextPullIn);
             });
 
 
@@ -399,8 +409,8 @@ function addValueToTrace(traceKey, time, timeLT, value) {
       lastX = timeLT;
     }
 
-    console.log(time - traces[traceKey].last, value, getDateString(timeLT));
-    traces[traceKey].trace.x.push(getDateString(timeLT));
+    //console.log(time - traces[traceKey].last, value, getDateString(timeLT));
+    traces[traceKey].trace.x.push(getDate(timeLT));
     traces[traceKey].trace.y.push(value);
     traces[traceKey].last = time;
 
