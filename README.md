@@ -22,7 +22,7 @@ for reference.`
 
 Example:
 
-``
+```
 "clientData": {
     "app-web-plotly": {
       "count/generic": {
