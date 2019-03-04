@@ -61,6 +61,6 @@ Todo:
 - Eventually display differently Series event (maybe as "marks")
 - Make sure that all series events' measures previous to the last one are fetched. (not done now)
 
-## Support and waranty
+## Support and warranty
 
 Pryv provides this software for educational and demonstration purposes with no support or warranty.
