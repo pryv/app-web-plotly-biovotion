@@ -41,7 +41,7 @@ Example:
 }
 ```
 
-## 'series:\*/*' Events processing
+## `series:\*/*` Events processing
 
 This version includes feature to use the preview of High-Frequency implementation on Pryv.
 
