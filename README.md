@@ -10,7 +10,7 @@ The app is accessible at [pryv.github.io/poc-plotly/](https://pryv.github.io/poc
 
 plotly display properties can be passed at a Stream level with the property `clientData`
 
-**properties of `app-web-plotly`**
+**properties of `poc-plotly`**
 You can specifiy per-eventType trace properties. All fields are optionals.
 
 
@@ -24,7 +24,7 @@ Example:
 
 ```
 "clientData": {
-    "app-web-plotly": {
+    "poc-plotly": {
       "count/generic": {
         "plotKey": "Multiple",
         "titleY": "Z dimension"
@@ -45,18 +45,18 @@ Example:
 
 This version includes feature to use the preview of High-Frequency implementation on Pryv.
 
-This feature can be tested with: 
+This feature can be tested with:
 
-- [A Mouse tracker to generate events](https://perki.github.io/pryv-app-web-hfdemo/generator/index.html?pryv-reg=reg.preview.pryv.tech)  
+- [A Mouse tracker to generate events](https://perki.github.io/pryv-app-web-hfdemo/generator/index.html?pryv-reg=reg.preview.pryv.tech)
 
 
 Series events have been implemented as:
 
 - being happend to same "Stream" than standard events of the same type. Exemple: events of type "series:count/generic" on streamId "sampleStream" will be drawn on than events of type "count/generic" on the same stream.
 - By order Each event found will be processed, but only the last (with the higher event.time value will be monitored)
-- Monitoring is done by pulling on the API every `pullSerieFrequencyMs` ms 
+- Monitoring is done by pulling on the API every `pullSerieFrequencyMs` ms
 
-Todo: 
+Todo:
 
 - Eventually display differently Series event (maybe as "marks")
 - Make sure that all series events' measures previous to the last one are fetched. (not done now)

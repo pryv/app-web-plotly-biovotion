@@ -100,10 +100,10 @@ function setupMonitor(connection) {
 
   // get presets from stream structure
   connection.streams.walkTree({}, function (stream) { 
-    if (stream.clientData && stream.clientData['app-web-plotly']) {
-      Object.keys(stream.clientData['app-web-plotly']).forEach(function(eventType) {
+    if (stream.clientData && stream.clientData['poc-plotly']) {
+      Object.keys(stream.clientData['poc-plotly']).forEach(function(eventType) {
         var traceKey = stream.id + '_' + eventType;
-        presets[traceKey] = stream.clientData['app-web-plotly'][eventType];
+        presets[traceKey] = stream.clientData['poc-plotly'][eventType];
       });
     }
     console.log('Stream:' + stream.id + '->' + JSON.stringify(stream.clientData));
